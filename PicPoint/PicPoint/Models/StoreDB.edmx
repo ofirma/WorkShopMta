@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="PicPointDBModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="PicPointDBModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityContainer Name="PicPointDBModelStoreContainer">
           <EntitySet Name="Locations" EntityType="PicPointDBModel.Store.Locations" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="M2MLocationsPhotos" EntityType="PicPointDBModel.Store.M2MLocationsPhotos" store:Type="Tables" Schema="dbo" />
@@ -24,8 +24,8 @@
           <Key>
             <PropertyRef Name="location_id" />
           </Key>
-          <Property Name="location_id" Type="int" Nullable="false" />
-          <Property Name="trip_id" Type="int" Nullable="false" />
+          <Property Name="location_id" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="trip_id" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="coordinates" Type="int" />
           <Property Name="story" Type="varchar" MaxLength="50" />
         </EntityType>
@@ -33,17 +33,17 @@
           <Key>
             <PropertyRef Name="entity_id" />
           </Key>
-          <Property Name="entity_id" Type="int" Nullable="false" />
-          <Property Name="location_id" Type="int" Nullable="false" />
-          <Property Name="photo_id" Type="int" />
+          <Property Name="entity_id" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="location_id" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="photo_id" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Photos">
           <Key>
             <PropertyRef Name="photo_id" />
           </Key>
-          <Property Name="photo_id" Type="int" Nullable="false" />
-          <Property Name="trip_id" Type="int" Nullable="false" />
-          <Property Name="username" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="photo_id" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="trip_id" Type="varchar" MaxLength="50" />
+          <Property Name="username" Type="varchar" MaxLength="50" />
           <Property Name="photo" Type="image" />
           <Property Name="coordinates" Type="int" />
           <Property Name="timestamp" Type="timestamp" StoreGeneratedPattern="Computed" />
@@ -52,7 +52,7 @@
           <Key>
             <PropertyRef Name="trip_id" />
           </Key>
-          <Property Name="trip_id" Type="int" Nullable="false" />
+          <Property Name="trip_id" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="username" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Users">
@@ -63,7 +63,7 @@
           <Property Name="password" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <Association Name="FK_Photos_Users">
-          <End Role="Users" Type="PicPointDBModel.Store.Users" Multiplicity="1" />
+          <End Role="Users" Type="PicPointDBModel.Store.Users" Multiplicity="0..1" />
           <End Role="Photos" Type="PicPointDBModel.Store.Photos" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Users">
@@ -86,17 +86,16 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PicPointDBModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
         <EntityContainer Name="Database1Entities1" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Locations" EntityType="PicPointDBModel.Location" />
+          <EntitySet Name="Locations" EntityType="PicPointDBModel.Locations" />
           <EntitySet Name="M2MLocationsPhotos" EntityType="PicPointDBModel.M2MLocationsPhotos" />
-          <EntitySet Name="Photos" EntityType="PicPointDBModel.Photo" />
-          <EntitySet Name="Trips" EntityType="PicPointDBModel.Trip" />
-          <EntitySet Name="Users" EntityType="PicPointDBModel.User" />
+          <EntitySet Name="Photos" EntityType="PicPointDBModel.Photos" />
+          <EntitySet Name="Trips" EntityType="PicPointDBModel.Trips" />
+          <EntitySet Name="Users" EntityType="PicPointDBModel.Users" />
           <AssociationSet Name="FK_Photos_Users" Association="PicPointDBModel.FK_Photos_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Photos" EntitySet="Photos" />
@@ -106,55 +105,55 @@
             <End Role="Trips" EntitySet="Trips" />
           </AssociationSet>
         </EntityContainer>
-        <EntityType Name="Location">
+        <EntityType Name="Locations">
           <Key>
             <PropertyRef Name="location_id" />
           </Key>
-          <Property Name="location_id" Type="Int32" Nullable="false" />
-          <Property Name="trip_id" Type="Int32" Nullable="false" />
-          <Property Name="coordinates" Type="Int32" />
-          <Property Name="story" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Type="String" Name="location_id" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="trip_id" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="coordinates" />
+          <Property Type="String" Name="story" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="M2MLocationsPhotos">
           <Key>
             <PropertyRef Name="entity_id" />
           </Key>
-          <Property Name="entity_id" Type="Int32" Nullable="false" />
-          <Property Name="location_id" Type="Int32" Nullable="false" />
-          <Property Name="photo_id" Type="Int32" />
+          <Property Type="String" Name="entity_id" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="location_id" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="photo_id" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="Photo">
+        <EntityType Name="Photos">
           <Key>
             <PropertyRef Name="photo_id" />
           </Key>
-          <Property Name="photo_id" Type="Int32" Nullable="false" />
-          <Property Name="trip_id" Type="Int32" Nullable="false" />
-          <Property Name="username" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="photo1" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="coordinates" Type="Int32" />
-          <Property Name="timestamp" Type="Binary" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="User" Relationship="PicPointDBModel.FK_Photos_Users" FromRole="Photos" ToRole="Users" />
+          <Property Type="String" Name="photo_id" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="trip_id" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="username" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Binary" Name="photo" MaxLength="Max" FixedLength="false" />
+          <Property Type="Int32" Name="coordinates" />
+          <Property Type="Binary" Name="timestamp" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Users" Relationship="PicPointDBModel.FK_Photos_Users" FromRole="Photos" ToRole="Users" />
         </EntityType>
-        <EntityType Name="Trip">
+        <EntityType Name="Trips">
           <Key>
             <PropertyRef Name="trip_id" />
           </Key>
-          <Property Name="trip_id" Type="Int32" Nullable="false" />
-          <Property Name="username" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-          <NavigationProperty Name="User" Relationship="PicPointDBModel.FK_Trips_Users" FromRole="Trips" ToRole="Users" />
+          <Property Type="String" Name="trip_id" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="username" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Users" Relationship="PicPointDBModel.FK_Trips_Users" FromRole="Trips" ToRole="Users" />
         </EntityType>
-        <EntityType Name="User">
+        <EntityType Name="Users">
           <Key>
             <PropertyRef Name="username" />
           </Key>
-          <Property Name="username" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
-          <Property Name="password" Type="String" Nullable="false" MaxLength="50" Unicode="false" FixedLength="false" />
+          <Property Type="String" Name="username" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="password" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Photos" Relationship="PicPointDBModel.FK_Photos_Users" FromRole="Users" ToRole="Photos" />
           <NavigationProperty Name="Trips" Relationship="PicPointDBModel.FK_Trips_Users" FromRole="Users" ToRole="Trips" />
         </EntityType>
         <Association Name="FK_Photos_Users">
-          <End Role="Users" Type="PicPointDBModel.User" Multiplicity="1" />
-          <End Role="Photos" Type="PicPointDBModel.Photo" Multiplicity="*" />
+          <End Type="PicPointDBModel.Users" Role="Users" Multiplicity="0..1" />
+          <End Type="PicPointDBModel.Photos" Role="Photos" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Users">
               <PropertyRef Name="username" />
@@ -165,8 +164,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Trips_Users">
-          <End Role="Users" Type="PicPointDBModel.User" Multiplicity="0..1" />
-          <End Role="Trips" Type="PicPointDBModel.Trip" Multiplicity="*" />
+          <End Type="PicPointDBModel.Users" Role="Users" Multiplicity="0..1" />
+          <End Type="PicPointDBModel.Trips" Role="Trips" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Users">
               <PropertyRef Name="username" />
@@ -182,33 +181,53 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="PicPointDBModelStoreContainer" CdmEntityContainer="Database1Entities1">
-          <EntitySetMapping Name="Locations"><EntityTypeMapping TypeName="PicPointDBModel.Location"><MappingFragment StoreEntitySet="Locations">
-            <ScalarProperty Name="location_id" ColumnName="location_id" />
-            <ScalarProperty Name="trip_id" ColumnName="trip_id" />
-            <ScalarProperty Name="coordinates" ColumnName="coordinates" />
-            <ScalarProperty Name="story" ColumnName="story" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="M2MLocationsPhotos"><EntityTypeMapping TypeName="PicPointDBModel.M2MLocationsPhotos"><MappingFragment StoreEntitySet="M2MLocationsPhotos">
-            <ScalarProperty Name="entity_id" ColumnName="entity_id" />
-            <ScalarProperty Name="location_id" ColumnName="location_id" />
-            <ScalarProperty Name="photo_id" ColumnName="photo_id" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="Photos"><EntityTypeMapping TypeName="PicPointDBModel.Photo"><MappingFragment StoreEntitySet="Photos">
-            <ScalarProperty Name="photo_id" ColumnName="photo_id" />
-            <ScalarProperty Name="trip_id" ColumnName="trip_id" />
-            <ScalarProperty Name="username" ColumnName="username" />
-            <ScalarProperty Name="photo1" ColumnName="photo" />
-            <ScalarProperty Name="coordinates" ColumnName="coordinates" />
-            <ScalarProperty Name="timestamp" ColumnName="timestamp" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="Trips"><EntityTypeMapping TypeName="PicPointDBModel.Trip"><MappingFragment StoreEntitySet="Trips">
-            <ScalarProperty Name="trip_id" ColumnName="trip_id" />
-            <ScalarProperty Name="username" ColumnName="username" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
-          <EntitySetMapping Name="Users"><EntityTypeMapping TypeName="PicPointDBModel.User"><MappingFragment StoreEntitySet="Users">
-            <ScalarProperty Name="username" ColumnName="username" />
-            <ScalarProperty Name="password" ColumnName="password" />
-          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Locations">
+            <EntityTypeMapping TypeName="PicPointDBModel.Locations">
+              <MappingFragment StoreEntitySet="Locations">
+                <ScalarProperty Name="story" ColumnName="story" />
+                <ScalarProperty Name="coordinates" ColumnName="coordinates" />
+                <ScalarProperty Name="trip_id" ColumnName="trip_id" />
+                <ScalarProperty Name="location_id" ColumnName="location_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="M2MLocationsPhotos">
+            <EntityTypeMapping TypeName="PicPointDBModel.M2MLocationsPhotos">
+              <MappingFragment StoreEntitySet="M2MLocationsPhotos">
+                <ScalarProperty Name="photo_id" ColumnName="photo_id" />
+                <ScalarProperty Name="location_id" ColumnName="location_id" />
+                <ScalarProperty Name="entity_id" ColumnName="entity_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Photos">
+            <EntityTypeMapping TypeName="PicPointDBModel.Photos">
+              <MappingFragment StoreEntitySet="Photos">
+                <ScalarProperty Name="timestamp" ColumnName="timestamp" />
+                <ScalarProperty Name="coordinates" ColumnName="coordinates" />
+                <ScalarProperty Name="photo" ColumnName="photo" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="trip_id" ColumnName="trip_id" />
+                <ScalarProperty Name="photo_id" ColumnName="photo_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Trips">
+            <EntityTypeMapping TypeName="PicPointDBModel.Trips">
+              <MappingFragment StoreEntitySet="Trips">
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="trip_id" ColumnName="trip_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="PicPointDBModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="username" ColumnName="username" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -230,19 +249,19 @@
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
       <Diagram Name="StoreDB">
-        <EntityTypeShape EntityType="PicPointDBModel.Location" Width="1.5" PointX="5.75" PointY="0.75" Height="1.6803190104166672" IsExpanded="true" />
-        <EntityTypeShape EntityType="PicPointDBModel.M2MLocationsPhotos" Width="1.5" PointX="5.75" PointY="3.75" Height="1.5033984374999996" IsExpanded="true" />
-        <EntityTypeShape EntityType="PicPointDBModel.Photo" Width="1.5" PointX="3" PointY="1" Height="2.2110807291666656" IsExpanded="true" />
-        <EntityTypeShape EntityType="PicPointDBModel.Trip" Width="1.5" PointX="3" PointY="4" Height="1.5033984374999996" IsExpanded="true" />
-        <EntityTypeShape EntityType="PicPointDBModel.User" Width="1.5" PointX="0.75" PointY="2.5" Height="1.6803190104166657" IsExpanded="true" />
-        <AssociationConnector Association="PicPointDBModel.FK_Photos_Users" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.25" PointY="2.8555403645833328" />
-          <ConnectorPoint PointX="3" PointY="2.8555403645833328" />
+        <EntityTypeShape EntityType="PicPointDBModel.Locations" Width="1.5" PointX="5.75" PointY="0.75" Height="1.6803190104166674" />
+        <EntityTypeShape EntityType="PicPointDBModel.M2MLocationsPhotos" Width="1.5" PointX="5.75" PointY="3.75" Height="1.5033984374999996" />
+        <EntityTypeShape EntityType="PicPointDBModel.Photos" Width="1.5" PointX="3" PointY="1" Height="2.2110807291666674" />
+        <EntityTypeShape EntityType="PicPointDBModel.Trips" Width="1.5" PointX="3" PointY="4" Height="1.5033984374999996" />
+        <EntityTypeShape EntityType="PicPointDBModel.Users" Width="1.5" PointX="0.75" PointY="2.5" Height="1.6803190104166674" />
+        <AssociationConnector Association="PicPointDBModel.FK_Photos_Users" >
+          <ConnectorPoint PointX="2.25" PointY="2.8555403645833337" />
+          <ConnectorPoint PointX="3" PointY="2.8555403645833337" />
         </AssociationConnector>
-        <AssociationConnector Association="PicPointDBModel.FK_Trips_Users" ManuallyRouted="false">
-          <ConnectorPoint PointX="1.5" PointY="4.1803190104166656" />
-          <ConnectorPoint PointX="1.5" PointY="4.8418592239583322" />
-          <ConnectorPoint PointX="3" PointY="4.8418592239583322" />
+        <AssociationConnector Association="PicPointDBModel.FK_Trips_Users" >
+          <ConnectorPoint PointX="1.5" PointY="4.1803190104166674" />
+          <ConnectorPoint PointX="1.5" PointY="4.841859223958334" />
+          <ConnectorPoint PointX="3" PointY="4.841859223958334" />
         </AssociationConnector>
       </Diagram>
     </Diagrams>

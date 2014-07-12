@@ -4,6 +4,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using PicPoint.Models;
+using System.Data.SqlClient;
+using System;
+using System.IO;
 
 public class UploadController : ApiController
 {
@@ -31,6 +35,19 @@ public class UploadController : ApiController
                 // This illustrates how to get the file names.
                 foreach (MultipartFileData file in provider.FileData)
                 {
+                    Photos photo = Photos.CreatePhotos(Guid.NewGuid().ToString());
+                    FileStream stream = File.OpenRead(file.LocalFileName);
+                    byte[] fileBytes = new byte[stream.Length];
+
+                    stream.Read(fileBytes, 0, fileBytes.Length);
+                    stream.Close();
+                    photo.photo = fileBytes;
+                    using (var ctx = new Database1Entities1())
+                    {
+                        ctx.Photos.AddObject(photo);
+                        ctx.SaveChanges();
+                    }
+                    
                     Trace.WriteLine(file.Headers.ContentDisposition.FileName);
                     Trace.WriteLine("Server file path: " + file.LocalFileName);
                 }

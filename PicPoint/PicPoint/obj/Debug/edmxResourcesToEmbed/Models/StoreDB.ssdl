@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PicPointDBModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="PicPointDBModelStoreContainer">
+    <EntitySet Name="Locations" EntityType="PicPointDBModel.Store.Locations" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="M2MLocationsPhotos" EntityType="PicPointDBModel.Store.M2MLocationsPhotos" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Photos" EntityType="PicPointDBModel.Store.Photos" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Trips" EntityType="PicPointDBModel.Store.Trips" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Users" EntityType="PicPointDBModel.Store.Users" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_Photos_Users" Association="PicPointDBModel.Store.FK_Photos_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Photos" EntitySet="Photos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Trips_Users" Association="PicPointDBModel.Store.FK_Trips_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Trips" EntitySet="Trips" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Locations">
+    <Key>
+      <PropertyRef Name="location_id" />
+    </Key>
+    <Property Name="location_id" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="trip_id" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="coordinates" Type="int" />
+    <Property Name="story" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="M2MLocationsPhotos">
+    <Key>
+      <PropertyRef Name="entity_id" />
+    </Key>
+    <Property Name="entity_id" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="location_id" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="photo_id" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Photos">
+    <Key>
+      <PropertyRef Name="photo_id" />
+    </Key>
+    <Property Name="photo_id" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="trip_id" Type="varchar" MaxLength="50" />
+    <Property Name="username" Type="varchar" MaxLength="50" />
+    <Property Name="photo" Type="image" />
+    <Property Name="coordinates" Type="int" />
+    <Property Name="timestamp" Type="timestamp" StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="Trips">
+    <Key>
+      <PropertyRef Name="trip_id" />
+    </Key>
+    <Property Name="trip_id" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="username" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="username" />
+    </Key>
+    <Property Name="username" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="password" Type="varchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <Association Name="FK_Photos_Users">
+    <End Role="Users" Type="PicPointDBModel.Store.Users" Multiplicity="0..1" />
+    <End Role="Photos" Type="PicPointDBModel.Store.Photos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="username" />
+      </Principal>
+      <Dependent Role="Photos">
+        <PropertyRef Name="username" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Trips_Users">
+    <End Role="Users" Type="PicPointDBModel.Store.Users" Multiplicity="0..1" />
+    <End Role="Trips" Type="PicPointDBModel.Store.Trips" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="username" />
+      </Principal>
+      <Dependent Role="Trips">
+        <PropertyRef Name="username" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

@@ -8,18 +8,19 @@
 //------------------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
+using System.Data.EntityClient;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
-using System.Data.EntityClient;
-using System.ComponentModel;
-using System.Xml.Serialization;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
 
-[assembly: EdmRelationshipAttribute("PicPointDBModel", "FK_Photos_Users", "Users", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(PicPoint.Models.User), "Photos", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(PicPoint.Models.Photo), true)]
-[assembly: EdmRelationshipAttribute("PicPointDBModel", "FK_Trips_Users", "Users", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(PicPoint.Models.User), "Trips", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(PicPoint.Models.Trip), true)]
+[assembly: EdmRelationshipAttribute("PicPointDBModel", "FK_Photos_Users", "Users", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(PicPoint.Models.Users), "Photos", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(PicPoint.Models.Photos), true)]
+[assembly: EdmRelationshipAttribute("PicPointDBModel", "FK_Trips_Users", "Users", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(PicPoint.Models.Users), "Trips", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(PicPoint.Models.Trips), true)]
 
 #endregion
 
@@ -74,18 +75,18 @@ namespace PicPoint.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Location> Locations
+        public ObjectSet<Locations> Locations
         {
             get
             {
                 if ((_Locations == null))
                 {
-                    _Locations = base.CreateObjectSet<Location>("Locations");
+                    _Locations = base.CreateObjectSet<Locations>("Locations");
                 }
                 return _Locations;
             }
         }
-        private ObjectSet<Location> _Locations;
+        private ObjectSet<Locations> _Locations;
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -106,60 +107,61 @@ namespace PicPoint.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Photo> Photos
+        public ObjectSet<Photos> Photos
         {
             get
             {
                 if ((_Photos == null))
                 {
-                    _Photos = base.CreateObjectSet<Photo>("Photos");
+                    _Photos = base.CreateObjectSet<Photos>("Photos");
                 }
                 return _Photos;
             }
         }
-        private ObjectSet<Photo> _Photos;
+        private ObjectSet<Photos> _Photos;
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Trip> Trips
+        public ObjectSet<Trips> Trips
         {
             get
             {
                 if ((_Trips == null))
                 {
-                    _Trips = base.CreateObjectSet<Trip>("Trips");
+                    _Trips = base.CreateObjectSet<Trips>("Trips");
                 }
                 return _Trips;
             }
         }
-        private ObjectSet<Trip> _Trips;
+        private ObjectSet<Trips> _Trips;
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<User> Users
+        public ObjectSet<Users> Users
         {
             get
             {
                 if ((_Users == null))
                 {
-                    _Users = base.CreateObjectSet<User>("Users");
+                    _Users = base.CreateObjectSet<Users>("Users");
                 }
                 return _Users;
             }
         }
-        private ObjectSet<User> _Users;
+        private ObjectSet<Users> _Users;
 
         #endregion
+
         #region AddTo Methods
     
         /// <summary>
         /// Deprecated Method for adding a new object to the Locations EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToLocations(Location location)
+        public void AddToLocations(Locations locations)
         {
-            base.AddObject("Locations", location);
+            base.AddObject("Locations", locations);
         }
     
         /// <summary>
@@ -173,59 +175,60 @@ namespace PicPoint.Models
         /// <summary>
         /// Deprecated Method for adding a new object to the Photos EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToPhotos(Photo photo)
+        public void AddToPhotos(Photos photos)
         {
-            base.AddObject("Photos", photo);
+            base.AddObject("Photos", photos);
         }
     
         /// <summary>
         /// Deprecated Method for adding a new object to the Trips EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToTrips(Trip trip)
+        public void AddToTrips(Trips trips)
         {
-            base.AddObject("Trips", trip);
+            base.AddObject("Trips", trips);
         }
     
         /// <summary>
         /// Deprecated Method for adding a new object to the Users EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
-        public void AddToUsers(User user)
+        public void AddToUsers(Users users)
         {
-            base.AddObject("Users", user);
+            base.AddObject("Users", users);
         }
 
         #endregion
+
     }
-    
 
     #endregion
-    
+
     #region Entities
     
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="PicPointDBModel", Name="Location")]
+    [EdmEntityTypeAttribute(NamespaceName="PicPointDBModel", Name="Locations")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class Location : EntityObject
+    public partial class Locations : EntityObject
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new Location object.
+        /// Create a new Locations object.
         /// </summary>
         /// <param name="location_id">Initial value of the location_id property.</param>
         /// <param name="trip_id">Initial value of the trip_id property.</param>
-        public static Location CreateLocation(global::System.Int32 location_id, global::System.Int32 trip_id)
+        public static Locations CreateLocations(global::System.String location_id, global::System.String trip_id)
         {
-            Location location = new Location();
-            location.location_id = location_id;
-            location.trip_id = trip_id;
-            return location;
+            Locations locations = new Locations();
+            locations.location_id = location_id;
+            locations.trip_id = trip_id;
+            return locations;
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -233,7 +236,7 @@ namespace PicPoint.Models
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int32 location_id
+        public global::System.String location_id
         {
             get
             {
@@ -245,14 +248,14 @@ namespace PicPoint.Models
                 {
                     Onlocation_idChanging(value);
                     ReportPropertyChanging("location_id");
-                    _location_id = StructuralObject.SetValidValue(value);
+                    _location_id = StructuralObject.SetValidValue(value, false);
                     ReportPropertyChanged("location_id");
                     Onlocation_idChanged();
                 }
             }
         }
-        private global::System.Int32 _location_id;
-        partial void Onlocation_idChanging(global::System.Int32 value);
+        private global::System.String _location_id;
+        partial void Onlocation_idChanging(global::System.String value);
         partial void Onlocation_idChanged();
     
         /// <summary>
@@ -260,7 +263,7 @@ namespace PicPoint.Models
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int32 trip_id
+        public global::System.String trip_id
         {
             get
             {
@@ -270,13 +273,13 @@ namespace PicPoint.Models
             {
                 Ontrip_idChanging(value);
                 ReportPropertyChanging("trip_id");
-                _trip_id = StructuralObject.SetValidValue(value);
+                _trip_id = StructuralObject.SetValidValue(value, false);
                 ReportPropertyChanged("trip_id");
                 Ontrip_idChanged();
             }
         }
-        private global::System.Int32 _trip_id;
-        partial void Ontrip_idChanging(global::System.Int32 value);
+        private global::System.String _trip_id;
+        partial void Ontrip_idChanging(global::System.String value);
         partial void Ontrip_idChanged();
     
         /// <summary>
@@ -328,6 +331,7 @@ namespace PicPoint.Models
         partial void OnstoryChanged();
 
         #endregion
+
     
     }
     
@@ -346,7 +350,7 @@ namespace PicPoint.Models
         /// </summary>
         /// <param name="entity_id">Initial value of the entity_id property.</param>
         /// <param name="location_id">Initial value of the location_id property.</param>
-        public static M2MLocationsPhotos CreateM2MLocationsPhotos(global::System.Int32 entity_id, global::System.Int32 location_id)
+        public static M2MLocationsPhotos CreateM2MLocationsPhotos(global::System.String entity_id, global::System.String location_id)
         {
             M2MLocationsPhotos m2MLocationsPhotos = new M2MLocationsPhotos();
             m2MLocationsPhotos.entity_id = entity_id;
@@ -355,6 +359,7 @@ namespace PicPoint.Models
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -362,7 +367,7 @@ namespace PicPoint.Models
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int32 entity_id
+        public global::System.String entity_id
         {
             get
             {
@@ -374,14 +379,14 @@ namespace PicPoint.Models
                 {
                     Onentity_idChanging(value);
                     ReportPropertyChanging("entity_id");
-                    _entity_id = StructuralObject.SetValidValue(value);
+                    _entity_id = StructuralObject.SetValidValue(value, false);
                     ReportPropertyChanged("entity_id");
                     Onentity_idChanged();
                 }
             }
         }
-        private global::System.Int32 _entity_id;
-        partial void Onentity_idChanging(global::System.Int32 value);
+        private global::System.String _entity_id;
+        partial void Onentity_idChanging(global::System.String value);
         partial void Onentity_idChanged();
     
         /// <summary>
@@ -389,7 +394,7 @@ namespace PicPoint.Models
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int32 location_id
+        public global::System.String location_id
         {
             get
             {
@@ -399,13 +404,13 @@ namespace PicPoint.Models
             {
                 Onlocation_idChanging(value);
                 ReportPropertyChanging("location_id");
-                _location_id = StructuralObject.SetValidValue(value);
+                _location_id = StructuralObject.SetValidValue(value, false);
                 ReportPropertyChanged("location_id");
                 Onlocation_idChanged();
             }
         }
-        private global::System.Int32 _location_id;
-        partial void Onlocation_idChanging(global::System.Int32 value);
+        private global::System.String _location_id;
+        partial void Onlocation_idChanging(global::System.String value);
         partial void Onlocation_idChanged();
     
         /// <summary>
@@ -413,7 +418,7 @@ namespace PicPoint.Models
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int32> photo_id
+        public global::System.String photo_id
         {
             get
             {
@@ -423,45 +428,43 @@ namespace PicPoint.Models
             {
                 Onphoto_idChanging(value);
                 ReportPropertyChanging("photo_id");
-                _photo_id = StructuralObject.SetValidValue(value);
+                _photo_id = StructuralObject.SetValidValue(value, true);
                 ReportPropertyChanged("photo_id");
                 Onphoto_idChanged();
             }
         }
-        private Nullable<global::System.Int32> _photo_id;
-        partial void Onphoto_idChanging(Nullable<global::System.Int32> value);
+        private global::System.String _photo_id;
+        partial void Onphoto_idChanging(global::System.String value);
         partial void Onphoto_idChanged();
 
         #endregion
+
     
     }
     
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="PicPointDBModel", Name="Photo")]
+    [EdmEntityTypeAttribute(NamespaceName="PicPointDBModel", Name="Photos")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class Photo : EntityObject
+    public partial class Photos : EntityObject
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new Photo object.
+        /// Create a new Photos object.
         /// </summary>
         /// <param name="photo_id">Initial value of the photo_id property.</param>
-        /// <param name="trip_id">Initial value of the trip_id property.</param>
-        /// <param name="username">Initial value of the username property.</param>
-        public static Photo CreatePhoto(global::System.Int32 photo_id, global::System.Int32 trip_id, global::System.String username)
+        public static Photos CreatePhotos(global::System.String photo_id)
         {
-            Photo photo = new Photo();
-            photo.photo_id = photo_id;
-            photo.trip_id = trip_id;
-            photo.username = username;
-            return photo;
+            Photos photos = new Photos();
+            photos.photo_id = photo_id;
+            return photos;
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -469,7 +472,7 @@ namespace PicPoint.Models
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int32 photo_id
+        public global::System.String photo_id
         {
             get
             {
@@ -481,22 +484,22 @@ namespace PicPoint.Models
                 {
                     Onphoto_idChanging(value);
                     ReportPropertyChanging("photo_id");
-                    _photo_id = StructuralObject.SetValidValue(value);
+                    _photo_id = StructuralObject.SetValidValue(value, false);
                     ReportPropertyChanged("photo_id");
                     Onphoto_idChanged();
                 }
             }
         }
-        private global::System.Int32 _photo_id;
-        partial void Onphoto_idChanging(global::System.Int32 value);
+        private global::System.String _photo_id;
+        partial void Onphoto_idChanging(global::System.String value);
         partial void Onphoto_idChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.Int32 trip_id
+        public global::System.String trip_id
         {
             get
             {
@@ -506,19 +509,19 @@ namespace PicPoint.Models
             {
                 Ontrip_idChanging(value);
                 ReportPropertyChanging("trip_id");
-                _trip_id = StructuralObject.SetValidValue(value);
+                _trip_id = StructuralObject.SetValidValue(value, true);
                 ReportPropertyChanged("trip_id");
                 Ontrip_idChanged();
             }
         }
-        private global::System.Int32 _trip_id;
-        partial void Ontrip_idChanging(global::System.Int32 value);
+        private global::System.String _trip_id;
+        partial void Ontrip_idChanging(global::System.String value);
         partial void Ontrip_idChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
         public global::System.String username
         {
@@ -530,7 +533,7 @@ namespace PicPoint.Models
             {
                 OnusernameChanging(value);
                 ReportPropertyChanging("username");
-                _username = StructuralObject.SetValidValue(value, false);
+                _username = StructuralObject.SetValidValue(value, true);
                 ReportPropertyChanged("username");
                 OnusernameChanged();
             }
@@ -544,24 +547,24 @@ namespace PicPoint.Models
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.Byte[] photo1
+        public global::System.Byte[] photo
         {
             get
             {
-                return StructuralObject.GetValidValue(_photo1);
+                return StructuralObject.GetValidValue(_photo);
             }
             set
             {
-                Onphoto1Changing(value);
-                ReportPropertyChanging("photo1");
-                _photo1 = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("photo1");
-                Onphoto1Changed();
+                OnphotoChanging(value);
+                ReportPropertyChanging("photo");
+                _photo = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("photo");
+                OnphotoChanged();
             }
         }
-        private global::System.Byte[] _photo1;
-        partial void Onphoto1Changing(global::System.Byte[] value);
-        partial void Onphoto1Changed();
+        private global::System.Byte[] _photo;
+        partial void OnphotoChanging(global::System.Byte[] value);
+        partial void OnphotoChanged();
     
         /// <summary>
         /// No Metadata Documentation available.
@@ -612,6 +615,7 @@ namespace PicPoint.Models
         partial void OntimestampChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -622,15 +626,15 @@ namespace PicPoint.Models
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("PicPointDBModel", "FK_Photos_Users", "Users")]
-        public User User
+        public Users Users
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("PicPointDBModel.FK_Photos_Users", "Users").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Users>("PicPointDBModel.FK_Photos_Users", "Users").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("PicPointDBModel.FK_Photos_Users", "Users").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Users>("PicPointDBModel.FK_Photos_Users", "Users").Value = value;
             }
         }
         /// <summary>
@@ -638,46 +642,48 @@ namespace PicPoint.Models
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<User> UserReference
+        public EntityReference<Users> UsersReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("PicPointDBModel.FK_Photos_Users", "Users");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Users>("PicPointDBModel.FK_Photos_Users", "Users");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("PicPointDBModel.FK_Photos_Users", "Users", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Users>("PicPointDBModel.FK_Photos_Users", "Users", value);
                 }
             }
         }
 
         #endregion
+
     }
     
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="PicPointDBModel", Name="Trip")]
+    [EdmEntityTypeAttribute(NamespaceName="PicPointDBModel", Name="Trips")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class Trip : EntityObject
+    public partial class Trips : EntityObject
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new Trip object.
+        /// Create a new Trips object.
         /// </summary>
         /// <param name="trip_id">Initial value of the trip_id property.</param>
-        public static Trip CreateTrip(global::System.Int32 trip_id)
+        public static Trips CreateTrips(global::System.String trip_id)
         {
-            Trip trip = new Trip();
-            trip.trip_id = trip_id;
-            return trip;
+            Trips trips = new Trips();
+            trips.trip_id = trip_id;
+            return trips;
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -685,7 +691,7 @@ namespace PicPoint.Models
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int32 trip_id
+        public global::System.String trip_id
         {
             get
             {
@@ -697,14 +703,14 @@ namespace PicPoint.Models
                 {
                     Ontrip_idChanging(value);
                     ReportPropertyChanging("trip_id");
-                    _trip_id = StructuralObject.SetValidValue(value);
+                    _trip_id = StructuralObject.SetValidValue(value, false);
                     ReportPropertyChanged("trip_id");
                     Ontrip_idChanged();
                 }
             }
         }
-        private global::System.Int32 _trip_id;
-        partial void Ontrip_idChanging(global::System.Int32 value);
+        private global::System.String _trip_id;
+        partial void Ontrip_idChanging(global::System.String value);
         partial void Ontrip_idChanged();
     
         /// <summary>
@@ -732,6 +738,7 @@ namespace PicPoint.Models
         partial void OnusernameChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -742,15 +749,15 @@ namespace PicPoint.Models
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("PicPointDBModel", "FK_Trips_Users", "Users")]
-        public User User
+        public Users Users
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("PicPointDBModel.FK_Trips_Users", "Users").Value;
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Users>("PicPointDBModel.FK_Trips_Users", "Users").Value;
             }
             set
             {
-                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("PicPointDBModel.FK_Trips_Users", "Users").Value = value;
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Users>("PicPointDBModel.FK_Trips_Users", "Users").Value = value;
             }
         }
         /// <summary>
@@ -758,48 +765,50 @@ namespace PicPoint.Models
         /// </summary>
         [BrowsableAttribute(false)]
         [DataMemberAttribute()]
-        public EntityReference<User> UserReference
+        public EntityReference<Users> UsersReference
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<User>("PicPointDBModel.FK_Trips_Users", "Users");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Users>("PicPointDBModel.FK_Trips_Users", "Users");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<User>("PicPointDBModel.FK_Trips_Users", "Users", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Users>("PicPointDBModel.FK_Trips_Users", "Users", value);
                 }
             }
         }
 
         #endregion
+
     }
     
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="PicPointDBModel", Name="User")]
+    [EdmEntityTypeAttribute(NamespaceName="PicPointDBModel", Name="Users")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
-    public partial class User : EntityObject
+    public partial class Users : EntityObject
     {
         #region Factory Method
     
         /// <summary>
-        /// Create a new User object.
+        /// Create a new Users object.
         /// </summary>
         /// <param name="username">Initial value of the username property.</param>
         /// <param name="password">Initial value of the password property.</param>
-        public static User CreateUser(global::System.String username, global::System.String password)
+        public static Users CreateUsers(global::System.String username, global::System.String password)
         {
-            User user = new User();
-            user.username = username;
-            user.password = password;
-            return user;
+            Users users = new Users();
+            users.username = username;
+            users.password = password;
+            return users;
         }
 
         #endregion
+
         #region Primitive Properties
     
         /// <summary>
@@ -854,6 +863,7 @@ namespace PicPoint.Models
         partial void OnpasswordChanged();
 
         #endregion
+
     
         #region Navigation Properties
     
@@ -864,17 +874,17 @@ namespace PicPoint.Models
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("PicPointDBModel", "FK_Photos_Users", "Photos")]
-        public EntityCollection<Photo> Photos
+        public EntityCollection<Photos> Photos
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Photo>("PicPointDBModel.FK_Photos_Users", "Photos");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Photos>("PicPointDBModel.FK_Photos_Users", "Photos");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Photo>("PicPointDBModel.FK_Photos_Users", "Photos", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Photos>("PicPointDBModel.FK_Photos_Users", "Photos", value);
                 }
             }
         }
@@ -886,24 +896,26 @@ namespace PicPoint.Models
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("PicPointDBModel", "FK_Trips_Users", "Trips")]
-        public EntityCollection<Trip> Trips
+        public EntityCollection<Trips> Trips
         {
             get
             {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Trip>("PicPointDBModel.FK_Trips_Users", "Trips");
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Trips>("PicPointDBModel.FK_Trips_Users", "Trips");
             }
             set
             {
                 if ((value != null))
                 {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Trip>("PicPointDBModel.FK_Trips_Users", "Trips", value);
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Trips>("PicPointDBModel.FK_Trips_Users", "Trips", value);
                 }
             }
         }
 
         #endregion
+
     }
 
     #endregion
+
     
 }
