@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="PicPointDBModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
   <EntityContainer Name="PicPointDBModelStoreContainer">
+    <EntitySet Name="Days" EntityType="PicPointDBModel.Store.Days" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Locations" EntityType="PicPointDBModel.Store.Locations" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="M2MLocationsPhotos" EntityType="PicPointDBModel.Store.M2MLocationsPhotos" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Photos" EntityType="PicPointDBModel.Store.Photos" store:Type="Tables" Schema="dbo" />
@@ -15,14 +16,25 @@
       <End Role="Trips" EntitySet="Trips" />
     </AssociationSet>
   </EntityContainer>
+  <EntityType Name="Days">
+    <Key>
+      <PropertyRef Name="day" />
+    </Key>
+    <Property Name="day" Type="int" Nullable="false" />
+    <Property Name="daySummary" Type="varchar" MaxLength="50" />
+    <Property Name="day_id" Type="varchar" MaxLength="50" />
+    <Property Name="trip_id" Type="varchar" MaxLength="50" />
+  </EntityType>
   <EntityType Name="Locations">
     <Key>
       <PropertyRef Name="location_id" />
     </Key>
     <Property Name="location_id" Type="varchar" Nullable="false" MaxLength="50" />
-    <Property Name="trip_id" Type="varchar" Nullable="false" MaxLength="50" />
-    <Property Name="coordinates" Type="int" />
+    <Property Name="longitude" Type="float" />
     <Property Name="story" Type="varchar" MaxLength="50" />
+    <Property Name="latitude" Type="float" />
+    <Property Name="travelModeToNextLocation" Type="varchar" MaxLength="50" />
+    <Property Name="day_id" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="M2MLocationsPhotos">
     <Key>
@@ -40,8 +52,16 @@
     <Property Name="trip_id" Type="varchar" MaxLength="50" />
     <Property Name="username" Type="varchar" MaxLength="50" />
     <Property Name="photo" Type="image" />
-    <Property Name="coordinates" Type="int" />
+    <Property Name="longitude1" Type="float" />
     <Property Name="timestamp" Type="timestamp" StoreGeneratedPattern="Computed" />
+    <Property Name="longitude2" Type="float" />
+    <Property Name="longitude3" Type="float" />
+    <Property Name="latitude1" Type="float" />
+    <Property Name="latitude2" Type="float" />
+    <Property Name="latitude3" Type="float" />
+    <Property Name="location_id" Type="varchar" MaxLength="50" />
+    <Property Name="name" Type="varchar" MaxLength="50" />
+    <Property Name="caption" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="Trips">
     <Key>
@@ -49,6 +69,7 @@
     </Key>
     <Property Name="trip_id" Type="varchar" Nullable="false" MaxLength="50" />
     <Property Name="username" Type="varchar" MaxLength="50" />
+    <Property Name="trip_name" Type="varchar(max)" />
   </EntityType>
   <EntityType Name="Users">
     <Key>

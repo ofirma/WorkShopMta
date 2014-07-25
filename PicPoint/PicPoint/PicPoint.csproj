@@ -166,14 +166,20 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\DeletePhotoController.cs" />
+    <Compile Include="Controllers\DeleteTripController.cs" />
     <Compile Include="Controllers\GetVideosByFilterController.cs" />
     <Compile Include="Controllers\GetVideosOfUserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LocationsController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DBEntities.cs" />
+    <Compile Include="Models\ExifReader.cs" />
+    <Compile Include="Models\ExifTags.cs" />
     <Compile Include="Models\StoreDB.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -15,12 +15,11 @@ namespace PicPoint.Controllers
     {
         public HttpResponseMessage GetVideosOfUser(string filter)
         {
-            Database1Entities1 de = new Database1Entities1();
             List<Trips> trips = new List<Trips>();
 
-            foreach (var obj in de.Trips)
+            foreach (var obj in DBEntities.Proxy.Trips)
             {
-                if (obj.trip_id.Contains(filter))
+                if (obj.trip_name.Contains(filter))
                 {
                     trips.Add(obj);
                 }

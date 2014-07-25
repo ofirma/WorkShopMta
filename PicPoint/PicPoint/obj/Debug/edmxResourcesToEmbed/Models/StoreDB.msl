@@ -1,16 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="PicPointDBModelStoreContainer" CdmEntityContainer="Database1Entities1">
-    <EntitySetMapping Name="Locations">
-      <EntityTypeMapping TypeName="PicPointDBModel.Locations">
-        <MappingFragment StoreEntitySet="Locations">
-          <ScalarProperty Name="story" ColumnName="story" />
-          <ScalarProperty Name="coordinates" ColumnName="coordinates" />
-          <ScalarProperty Name="trip_id" ColumnName="trip_id" />
-          <ScalarProperty Name="location_id" ColumnName="location_id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="M2MLocationsPhotos">
       <EntityTypeMapping TypeName="PicPointDBModel.M2MLocationsPhotos">
         <MappingFragment StoreEntitySet="M2MLocationsPhotos">
@@ -20,21 +10,10 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Photos">
-      <EntityTypeMapping TypeName="PicPointDBModel.Photos">
-        <MappingFragment StoreEntitySet="Photos">
-          <ScalarProperty Name="timestamp" ColumnName="timestamp" />
-          <ScalarProperty Name="coordinates" ColumnName="coordinates" />
-          <ScalarProperty Name="photo" ColumnName="photo" />
-          <ScalarProperty Name="username" ColumnName="username" />
-          <ScalarProperty Name="trip_id" ColumnName="trip_id" />
-          <ScalarProperty Name="photo_id" ColumnName="photo_id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Trips">
       <EntityTypeMapping TypeName="PicPointDBModel.Trips">
         <MappingFragment StoreEntitySet="Trips">
+          <ScalarProperty Name="trip_name" ColumnName="trip_name" />
           <ScalarProperty Name="username" ColumnName="username" />
           <ScalarProperty Name="trip_id" ColumnName="trip_id" />
         </MappingFragment>
@@ -45,6 +24,48 @@
         <MappingFragment StoreEntitySet="Users">
           <ScalarProperty Name="password" ColumnName="password" />
           <ScalarProperty Name="username" ColumnName="username" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Photos">
+      <EntityTypeMapping TypeName="PicPointDBModel.Photos">
+        <MappingFragment StoreEntitySet="Photos">
+          <ScalarProperty Name="caption" ColumnName="caption" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="location_id" ColumnName="location_id" />
+          <ScalarProperty Name="latitude3" ColumnName="latitude3" />
+          <ScalarProperty Name="latitude2" ColumnName="latitude2" />
+          <ScalarProperty Name="latitude1" ColumnName="latitude1" />
+          <ScalarProperty Name="longitude3" ColumnName="longitude3" />
+          <ScalarProperty Name="longitude2" ColumnName="longitude2" />
+          <ScalarProperty Name="timestamp" ColumnName="timestamp" />
+          <ScalarProperty Name="longitude1" ColumnName="longitude1" />
+          <ScalarProperty Name="photo" ColumnName="photo" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="trip_id" ColumnName="trip_id" />
+          <ScalarProperty Name="photo_id" ColumnName="photo_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Days">
+      <EntityTypeMapping TypeName="PicPointDBModel.Days">
+        <MappingFragment StoreEntitySet="Days">
+          <ScalarProperty Name="trip_id" ColumnName="trip_id" />
+          <ScalarProperty Name="day_id" ColumnName="day_id" />
+          <ScalarProperty Name="daySummary" ColumnName="daySummary" />
+          <ScalarProperty Name="day" ColumnName="day" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Locations">
+      <EntityTypeMapping TypeName="PicPointDBModel.Locations">
+        <MappingFragment StoreEntitySet="Locations">
+          <ScalarProperty Name="day_id" ColumnName="day_id" />
+          <ScalarProperty Name="travelModeToNextLocation" ColumnName="travelModeToNextLocation" />
+          <ScalarProperty Name="latitude" ColumnName="latitude" />
+          <ScalarProperty Name="story" ColumnName="story" />
+          <ScalarProperty Name="longitude" ColumnName="longitude" />
+          <ScalarProperty Name="location_id" ColumnName="location_id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

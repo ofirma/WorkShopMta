@@ -42,11 +42,23 @@ public class UploadController : ApiController
                     stream.Read(fileBytes, 0, fileBytes.Length);
                     stream.Close();
                     photo.photo = fileBytes;
-                    using (var ctx = new Database1Entities1())
+
+                    using (var reader = new ExifReader(file.LocalFileName))
                     {
-                        ctx.Photos.AddObject(photo);
-                        ctx.SaveChanges();
+                        double[] val;
+                        reader.GetTagValue(ExifTags.GPSLongitude, out val);
+                        photo.longitude1 = val[0];
+                        photo.longitude2 = val[1];
+                        photo.longitude3 = val[2];
+
+                        reader.GetTagValue(ExifTags.GPSLatitude, out val);
+                        photo.latitude1 = val[0];
+                        photo.latitude2 = val[1];
+                        photo.latitude3 = val[2];
                     }
+                    
+                    DBEntities.Proxy.Photos.AddObject(photo);
+                    DBEntities.Proxy.SaveChanges();
                     
                     Trace.WriteLine(file.Headers.ContentDisposition.FileName);
                     Trace.WriteLine("Server file path: " + file.LocalFileName);
