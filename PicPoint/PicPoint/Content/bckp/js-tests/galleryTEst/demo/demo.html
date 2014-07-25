@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ResponsiveSlides.js &middot; Responsive jQuery slideshow</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="../responsiveslides.css">
+  <link rel="stylesheet" href="demo.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script src="../responsiveslides.min.js"></script>
+  <script>
+    // You can also use "$(window).load(function() {"
+    function a(){
+        $('#wrapper').show();
+
+      // Slideshow 4
+      $("#slider4").responsiveSlides({
+        auto: true,
+        pager: false,
+        nav: true,
+        speed: 800,
+        namespace: "callbacks",
+        timeout: 1000,
+        before: function () {
+        //    $('.events').append("<li>before event fired.</li>");
+        },
+        after: function () {
+      //      $('.events').append("<li>after event fired.</li>");
+        }
+      });
+
+    }
+
+    $(document).ready(function () {
+        var images = [
+            { name: '1.jpg', caption: 'blabla1' },
+            { name: '2.jpg', caption: 'blabla2' },
+            { name: '3.jpg', caption: 'blabla3' }
+        ];
+
+        for (var i = 0; i < images.length; i++) {
+            var img = '<li>';
+            img += '<img src="images/' + images[i].name + '">';
+            img += '<p class="caption">' + images[i].caption + '</p>';
+            img += '</li>';
+            console.log(img);
+
+            $("#slider4").append(img);
+        }
+
+        a();
+    });
+  </script>
+</head>
+<body>
+  <div id="wrapper" style="display:none">
+    <!-- Slideshow 4 -->
+    <div class="callbacks_container">
+      <ul class="rslides" id="slider4">
+        <!--images in here-->
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,523 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title></title>
+
+    <link rel="stylesheet" href="css/movie/movie.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script src="js/movie/async.js"></script>
+
+    <link rel="stylesheet" href="css/movie/responsiveslides.css">
+    <link rel="stylesheet" href="css/movie/demo.css">
+    <script src="js/movie/responsiveslides.min.js"></script>
+
+    <script>
+
+        var DRIVING = "Driving";
+        var TRANSIT = "Transit";
+        var WALKING = "Walking";
+        var myLatlng;
+        var mapOptions;
+        var map;
+        var panorama;
+        var marker;
+        var days = createDays();
+
+        $(document).ready(function () {
+
+            var proxied = window.alert;
+            window.alert = function () {
+                // do something here
+                return proxied.apply(this, arguments);
+            };
+
+            initMap();
+            initElements();
+            startVideo();
+
+        });
+
+
+        function createDays() {
+            var innerDays = [
+                {
+                    day: 1,
+                    daySummary: "<br/>Day 1 - Tel Aviv<br/><br/>Rabin Square<br/>Dizengoff Square<br/>Taylet Tel Aviv",
+                    locations: [
+                        {
+                            latLang: { x: 32.08018, y: 34.78056 },
+                            name: "Rabin Square",
+                            pics: [
+                                { name: 'rabin1.jpg', caption: 'כיכר רבין' },
+                                { name: 'rabin2.jpg', caption: 'אני בכיכר' },
+                                { name: 'rabin3.jpg', caption: 'בלה בלה בלה' }
+                            ],
+                            travelModeToNextLocation: WALKING
+                        },
+                        {
+                            latLang: { x: 32.077825, y: 34.773898 },
+                            name: "Dizengof Square",
+                            pics: [
+                                { name: 'dizi1.jpg', caption: 'כיכר דיזנגוף 1' },
+                                { name: 'dizi2.jpg', caption: 'כיכר דיזנגוף 2' },
+                                { name: 'dizi3.jpg', caption: 'כיכר דיזנגוף 3' }
+                            ],
+                            travelModeToNextLocation: TRANSIT
+                        },
+                        {
+                            latLang: { x: 32.079636, y: 34.766977 },
+                            name: "Tayelet Tel Aviv",
+                            pics: [
+                                { name: 'Tayelet1.jpg', caption: 'טיילת תל אביב 1' },
+                                { name: 'Tayelet2.jpg', caption: 'טיילת תל אביב 2' },
+                                { name: 'Tayelet3.jpg', caption: 'טיילת תל אביב 3' }
+                            ]
+                        }
+                    ]
+                }
+            ];
+
+            return innerDays;
+        }
+
+        function partial(func /*, 0..n args */) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return function () {
+                var allArguments = args.concat(Array.prototype.slice.call(arguments));
+                return func.apply(this, allArguments);
+            };
+        }
+
+        function startVideo() {
+
+            var currentDay = 0;
+            async.whilst(
+                function () { return currentDay < days.length; },
+                function (callback) {
+                    async.series(animateDay(currentDay),
+                        function (err, results) {
+                            callback();
+                        });
+                    currentDay++;
+                },
+                function (err) {
+                    console.log('video is done');
+                }
+            );
+
+        }
+
+        function showStreetView(latLangParam, callback) {
+
+            //console.log('showStreetView');
+            //callback();
+
+            var latLang = new google.maps.LatLng(latLangParam.x, latLangParam.y);
+
+            // todo: get it outside
+            var content = '<div style="width:350px;font-size:20px;height: 30px; text-align: center; vertical-align: middle">Showing street view of ' + 'Rabin Square' + '</div>';
+
+            var infowindow = new google.maps.InfoWindow({
+                content: content
+            });
+
+            var marker = new google.maps.Marker({
+                position: latLang,
+                map: map,
+                title: ''
+            });
+
+            infowindow.open(map, marker);
+
+            setTimeout(function () {
+                showStreetViewInnner(latLang);
+                infowindow.close();
+            }, 2000);
+
+            setTimeout(function () {
+                callback();
+            }, 19000);
+            
+        }
+
+        function setPanoToCenterScreen() {
+
+            var winH = window.innerHeight;
+            var winW = window.innerWidth;
+            var left = (winW - 400) / 2;
+            var top = (winH - 400) / 2;
+
+            $('#pano').css('top', top);
+            $('#pano').css('left', left);
+
+        }
+
+        function showStreetViewInnner(latLang) {
+            var panoramaOptions = {
+                position: latLang,
+                pov: {
+                    heading: 1,
+                    pitch: 10
+                }
+            };
+            panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'), panoramaOptions);
+            map.setStreetView(panorama);
+
+            setPanoToCenterScreen();
+
+            $('#pano').css('visibility', 'visible');
+            $('#pano').css('display', 'none');
+            $("#pano").toggle('puff', { direction: "left" }, 1000);
+
+            var i = 0;
+
+            var panoInterval = setInterval(function () {
+                i += 1;
+                var pov2 = {
+                    heading: i,
+                    pitch: 10
+                };
+                panorama.setPov(pov2);
+                if (i == 360) {
+                    clearInterval(panoInterval);
+                    setTimeout(function () {
+                        $("#pano").toggle('puff', { direction: "left" }, 1000);
+                    }, 500);
+                }
+            }, 1);
+        }
+
+        function showPics(latLangParam, pics, callback) {
+            console.log('showPics');
+
+            var latLang = new google.maps.LatLng(latLangParam.x, latLangParam.y);
+
+            // todo: get it outside
+            var content = '<div style="width:350px;font-size:20px;text-align: center">Pictures taken here</div>';
+
+            var infowindow = new google.maps.InfoWindow({
+                content: content
+            });
+
+            var marker = new google.maps.Marker({
+                position: latLang,
+                map: map,
+                title: 'Uluru (Ayers Rock)'
+            });
+
+            infowindow.open(map, marker);
+
+            $("#callbacks_container").append('<ul class="rslides" id="slider4"></ul>');
+
+            for (var i = 0; i < pics.length; i++) {
+                var img = '<li>';
+                img += '<img src="resources/images/' + pics[i].name + '">';
+                img += '<p class="caption">' + pics[i].caption + '</p>';
+                img += '</li>';
+
+
+                $("#slider4").append(img);
+            }
+
+            setTimeout(function () {
+                showPicsSlideShow(pics.length, callback);
+            }, 1000);
+
+            var picsSpeed = 2000;
+            var mySleepTime = pics.length * picsSpeed + 1500;
+            setTimeout(function () {
+                infowindow.close();
+                callback();
+            }, mySleepTime);
+
+        }
+
+        function getTravelMode(travelModeInput) {
+            var travelMode;
+
+            if (travelModeInput == DRIVING) {
+                travelMode = google.maps.TravelMode.DRIVING;
+            }
+            else if (travelModeInput == TRANSIT) {
+                travelMode = google.maps.TravelMode.TRANSIT;
+            }
+            else {
+                travelMode = google.maps.TravelMode.WALKING;
+            }
+
+            return travelMode;
+        }
+
+        function getTravelModeIcon(travelModeInput) {
+            var travelModeIcon;
+
+            if (travelModeInput == DRIVING) {
+                travelModeIcon = "resources/icons/car.png";
+            }
+            else if (travelModeInput == TRANSIT) {
+                travelModeIcon = "resources/icons/transit.png";
+            }
+            else {
+                travelModeIcon = "resources/icons/Person.png";
+            }
+
+            return travelModeIcon;
+        }
+
+        function showRouteForNextLocation(startPoint, endPoint, travelModeInput, callback) {
+
+            // Showing directions info windows
+            var latLang = new google.maps.LatLng(startPoint.x, startPoint.y);
+
+            var content = '<div style="width:200px;font-size:20px;text-align: center">Showing directions to next location</div>';
+
+            var infowindow = new google.maps.InfoWindow({
+                content: content
+            });
+
+            var marker = new google.maps.Marker({
+                position: latLang,
+                map: map,
+                title: ''
+            });
+
+            infowindow.open(map, marker);
+
+            // Show the actual route directions
+            var movingMarker3;
+            setTimeout(function () {
+                // Instantiate a directions service.
+                directionsService = new google.maps.DirectionsService();
+                directionsDisplay = new google.maps.DirectionsRenderer();
+                directionsDisplay.setMap(map);
+
+                var travelMode = getTravelMode(travelModeInput);
+                var travelModeIcon = getTravelModeIcon(travelModeInput);
+
+                var start = new google.maps.LatLng(startPoint.x, startPoint.y);
+                var end = new google.maps.LatLng(endPoint.x, endPoint.y);
+                var request = {
+                    origin: start,
+                    destination: end,
+                    travelMode: travelMode
+                };
+
+
+                var image = {
+                    url: travelModeIcon,
+                    // This marker is 20 pixels wide by 32 pixels tall.
+                };
+                movingMarker3 = new google.maps.Marker({
+                    position: temp,
+                    map: map,
+                    icon: image
+                });
+
+                var temp;
+                directionsService.route(request, function (response, status) {
+                    if (status == google.maps.DirectionsStatus.OK) {
+                        directionsDisplay.setDirections(response);
+                    }
+
+                    var i = 0;
+                    setTimeout(function () {
+                        var walkingInterval = setInterval(function () {
+                            i++;
+                            temp = response.routes[0].overview_path[i];
+                            movingMarker3.setPosition(temp);
+                            if (i == response.routes[0].overview_path.length - 1) {
+                                clearInterval(walkingInterval);
+
+                                setTimeout(function () {
+                                    map.panTo(end);
+                                }, 300);
+                            }
+                        }, 100);
+                    }, 2000);
+                });
+            }, 1500);
+
+            // Remove the directions
+            setTimeout(function () {
+
+                if (directionsDisplay != null) {
+                    directionsDisplay.setMap(null);
+                    directionsDisplay = null;
+                    movingMarker3.setMap(null);
+                }
+
+                infowindow.close();
+
+                setTimeout(function () {
+                    callback();
+                }, 500);
+                
+            }, 8000);
+
+        }
+
+        function animateDay(dayNum) {
+
+            var dayData = days[dayNum];
+
+            var actions = [];
+
+            var f0 = partial(showDaySummary, dayData.daySummary);
+            actions.push(f0);
+
+            for (var i = 0; i < dayData.locations.length; i++) {
+
+                var f1 = partial(showStreetView, dayData.locations[i].latLang);
+                var f2 = partial(showPics, dayData.locations[i].latLang, dayData.locations[i].pics);
+
+                actions.push(f1, f2);
+
+                if ((i + 1) != dayData.locations.length) {
+                    var f3 = partial(showRouteForNextLocation,
+                                     dayData.locations[i].latLang,
+                                     dayData.locations[i + 1].latLang,
+                                     dayData.locations[i].travelModeToNextLocation);
+                    actions.push(f3);
+                }
+            }
+
+            console.log(actions[3]);
+
+            return actions;
+        }
+
+        function initElements() {
+            setElementToScreenCenter($("#msg"));
+            setElementToScreenCenter($("#wrapper"));
+        }
+
+        function initMap() {
+            var firstLatLangVal = days[0].locations[0].latLang;
+            var firstLatLang = new google.maps.LatLng(firstLatLangVal.x, firstLatLangVal.y);
+
+            mapOptions = {
+                zoom: 18,
+                center: firstLatLang,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+            initPanoramaView();
+        }
+
+        function initPanoramaView() {
+            var firstLatLang = days[0].locations[0].latLang;
+            var firstLatLang = new google.maps.LatLng(firstLatLang);
+            var panoramaOptions = {
+                position: firstLatLang,
+                pov: {
+                    heading: 1,
+                    pitch: 10
+                }
+            };
+
+            panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'), panoramaOptions);
+            map.setStreetView(panorama);
+        }
+
+        function setElementToScreenCenter(e) {
+            var w = e.width();
+            var h = e.height();
+            var winH = window.innerHeight;
+            var winW = window.innerWidth;
+
+            var left = (winW - w) / 2;
+            var top = (winH - h) / 2;
+            e.css('top', top);
+            e.css('left', left);
+        }
+
+        var showDaySummary = function (daySummary, callback) {
+            
+            showDaySummaryInner(daySummary);
+
+            setTimeout(function () {
+                callback();
+            }, 3000);
+
+        };
+
+        var showDaySummaryInner = function (daySummary) {
+
+            setElementToScreenCenter($("#msg"));
+            $("#msg").toggle('drop', { direction: "left" }, 500);
+            var dest = document.getElementById("msg");
+
+            var text = daySummary;
+            dest.innerHTML = text;
+
+            setTimeout(function () {
+                $("#msg").toggle('drop', { direction: "left" }, 500);
+                $('#grayCover').css('display', 'none');
+            }, 2000);
+
+        };
+
+        function getDaySummaryText(dayData) {
+            // todo: get from json
+            return "<br/>Day 1 - Tel Aviv<br/><br/>Rabin Square<br/>Dizengoff Square";
+        }
+
+        function showPicsSlideShow(numOfPics) {
+            console.log('showPicsSlideShow triggered');
+            var globalPicsShown = 1;
+            $('#grayCover').show();
+            $('#wrapper').toggle('puff', { direction: "left" }, 500);
+
+            // Slideshow 4
+            $("#slider4").responsiveSlides({
+                auto: true,
+                pager: false,
+                nav: true,
+                speed: 800,
+                namespace: "callbacks",
+                timeout: 2000,
+                after: function () {
+                    globalPicsShown++;
+                    if (globalPicsShown == numOfPics) {
+                        setTimeout(function () {
+                            $('#wrapper').toggle('puff', { direction: "left" }, 500);
+
+                            setTimeout(function () {
+                                $('#slider4').remove();
+                            }, 600);
+
+                        }, 100);
+                        $('#grayCover').hide();
+                    }
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+    <div id="wrapper" style="display:none">
+        <div id="callbacks_container" class="callbacks_container">
+            <!-- Slideshow 4 -->
+        </div>
+    </div>
+    <div id="grayCover" class="grayCover"></div>
+    <div id="msg" class="msg">
+    </div>
+    <div id="pano" class="pano">
+    </div>
+    <div id="map-canvas"></div>
+
+    <div class="audioPlayer">
+        <audio onpause="" autoplay loop controls>
+            <source src="resources/sounds/1.mp3">
+        </audio>
+    </div>
+</body>
+</html>
