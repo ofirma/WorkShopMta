@@ -11,7 +11,7 @@ namespace PicPoint.Controllers
     public class CheckIfUserIsLoggedInController : Controller
     {
         //
-        // GET: /CheckIfUserIsLoggedIn/
+        // GET: /CheckIfUserIsLoggedInfdsfsd/
 
         public ActionResult Get()
         {
