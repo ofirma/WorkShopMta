@@ -9,26 +9,32 @@ using System.Device.Location;
 
 namespace PicPoint.Controllers
 {
-    public class CreateTripController : ApiController
+    public class CreateTripController : Controller
     {
-        public const double DEFAULT_DISTANCE = 100;
-        public class PhotosComparer : IEqualityComparer<Photos>
+        public const double DEFAULT_DISTANCE = 500000;
+        public class PhotosComparer : IEqualityComparer<PicWrapper>
         {
-            public bool Equals(Photos x, Photos y)
+            public bool Equals(PicWrapper x, PicWrapper y)
             {
-                var p1 = new GeoCoordinate(x.longitude3.Value, x.longitude3.Value);
-                var p2 = new GeoCoordinate(y.longitude3.Value, y.longitude3.Value);
-                if (p1.GetDistanceTo(p2) < DEFAULT_DISTANCE)
-                {
-                    return true;
-                }
-                return false;
+                return x.id == y.id;
             }
 
-            public int GetHashCode(Photos obj)
+            public int GetHashCode(PicWrapper obj)
             {
-                return obj.GetHashCode();
+                return obj.id.GetHashCode();
             }
+        }
+
+        public class PicWrapper
+        {
+            public PicWrapper(Photos photo)
+            {
+                photoData = photo;
+                id = Guid.NewGuid().ToString();
+            }
+
+            public Photos photoData;
+            public string id;
         }
 
 
@@ -55,13 +61,23 @@ namespace PicPoint.Controllers
             public DateTime Datetime;
         }
 
-        public void Get(string id)
+        public void Get()
         {
-            List<Photos> photos = DBEntities.Proxy.Photos.Where(x => x.username == id).ToList();
+            List<Photos> photos = DBEntities.Proxy.Photos.Where(x => x.trip_id == null).ToList();
+
+            if (photos.Count == 0)
+            {
+                return;
+            }
+
+
             string newTripId = Guid.NewGuid().ToString();
             Trips trip = Trips.CreateTrips(newTripId);
-            trip.username = id;
+            string username = Request.Cookies["CurrentUser"]["Username"];
+            trip.username = username;
             DBEntities.Proxy.AddToTrips(trip);
+
+
             var sortedPhotos = photos.OrderBy(x => x.date).ToList();
             Date date = new Date(sortedPhotos[0].date.Value.Day,
                 sortedPhotos[0].date.Value.Month,
@@ -98,12 +114,13 @@ namespace PicPoint.Controllers
             foreach (Days currDay in days)
             {
                 List<Photos> photosOfDay = DBEntities.Proxy.Photos.Where(x => x.day_id == currDay.day_id).ToList();
+                List<PicWrapper> list = DividePhotos(photosOfDay);
                 PhotosComparer pc = new PhotosComparer();
-                var listOfPhotos = photosOfDay.GroupBy(x => x, pc).Select(grp => grp.ToList()).ToList();
-                foreach (List<Photos> currList in listOfPhotos)
+                var listOfPhotos = list.GroupBy(x => x, pc).Select(grp => grp.ToList()).ToList();
+                foreach (List<PicWrapper> currList in listOfPhotos)
                 {
                     Locations loc = Locations.CreateLocations(Guid.NewGuid().ToString());
-                    loc.day_id = currList[0].day_id;
+                    loc.day_id = currList[0].photoData.day_id;
                     DBEntities.Proxy.AddToLocations(loc);
                 }
             }
@@ -113,6 +130,43 @@ namespace PicPoint.Controllers
 
 
             DBEntities.Proxy.SaveChanges();
+        }
+
+        private List<PicWrapper> DividePhotos(List<Photos> photosOfDay)
+        {
+            List<PicWrapper> list = new List<PicWrapper>();
+            foreach (var currObj in photosOfDay)
+            {
+                list.Add(new PicWrapper(currObj));
+            }
+            foreach (var x in list)
+            {
+                foreach (var y in list)
+                {
+                    Compare(x, y);
+                }
+            }
+            return list;
+        }
+
+        private void Compare(PicWrapper x, PicWrapper y)
+        {
+            if (x.photoData.photo_id == y.photoData.photo_id)
+            {
+                return;
+            }
+            var p1 = new GeoCoordinate(x.photoData.longitude3.Value, x.photoData.longitude3.Value);
+            var p2 = new GeoCoordinate(y.photoData.longitude3.Value, y.photoData.longitude3.Value);
+            if (p1.GetDistanceTo(p2) < DEFAULT_DISTANCE)
+            {
+                string guid = null;
+                if (x.id != y.id)
+                {
+                     y.id = x.id;
+                }
+
+            }
+
         }
 
         private string GetRandomCity()
