@@ -18,4 +18,9 @@ public class DBEntities
             return instance;
         }
     }
+
+    public static string[] ParseString(string id)
+    {
+        return id.Split(' ');
+    }
 }

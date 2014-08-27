@@ -123,6 +123,22 @@ namespace PicPoint.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
+        public ObjectSet<Locations> Locations
+        {
+            get
+            {
+                if ((_Locations == null))
+                {
+                    _Locations = base.CreateObjectSet<Locations>("Locations");
+                }
+                return _Locations;
+            }
+        }
+        private ObjectSet<Locations> _Locations;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
         public ObjectSet<Photos> Photos
         {
             get
@@ -151,22 +167,6 @@ namespace PicPoint.Models
             }
         }
         private ObjectSet<Days> _Days;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        public ObjectSet<Locations> Locations
-        {
-            get
-            {
-                if ((_Locations == null))
-                {
-                    _Locations = base.CreateObjectSet<Locations>("Locations");
-                }
-                return _Locations;
-            }
-        }
-        private ObjectSet<Locations> _Locations;
 
         #endregion
 
@@ -197,6 +197,14 @@ namespace PicPoint.Models
         }
     
         /// <summary>
+        /// Deprecated Method for adding a new object to the Locations EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToLocations(Locations locations)
+        {
+            base.AddObject("Locations", locations);
+        }
+    
+        /// <summary>
         /// Deprecated Method for adding a new object to the Photos EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
         /// </summary>
         public void AddToPhotos(Photos photos)
@@ -210,14 +218,6 @@ namespace PicPoint.Models
         public void AddToDays(Days days)
         {
             base.AddObject("Days", days);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Locations EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToLocations(Locations locations)
-        {
-            base.AddObject("Locations", locations);
         }
 
         #endregion
@@ -242,10 +242,12 @@ namespace PicPoint.Models
         /// Create a new Days object.
         /// </summary>
         /// <param name="day">Initial value of the day property.</param>
-        public static Days CreateDays(global::System.Int32 day)
+        /// <param name="day_id">Initial value of the day_id property.</param>
+        public static Days CreateDays(global::System.Int32 day, global::System.String day_id)
         {
             Days days = new Days();
             days.day = day;
+            days.day_id = day_id;
             return days;
         }
 
@@ -256,7 +258,7 @@ namespace PicPoint.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.Int32 day
         {
@@ -266,14 +268,11 @@ namespace PicPoint.Models
             }
             set
             {
-                if (_day != value)
-                {
-                    OndayChanging(value);
-                    ReportPropertyChanging("day");
-                    _day = StructuralObject.SetValidValue(value);
-                    ReportPropertyChanged("day");
-                    OndayChanged();
-                }
+                OndayChanging(value);
+                ReportPropertyChanging("day");
+                _day = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("day");
+                OndayChanged();
             }
         }
         private global::System.Int32 _day;
@@ -307,7 +306,7 @@ namespace PicPoint.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [DataMemberAttribute()]
         public global::System.String day_id
         {
@@ -317,11 +316,14 @@ namespace PicPoint.Models
             }
             set
             {
-                Onday_idChanging(value);
-                ReportPropertyChanging("day_id");
-                _day_id = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("day_id");
-                Onday_idChanged();
+                if (_day_id != value)
+                {
+                    Onday_idChanging(value);
+                    ReportPropertyChanging("day_id");
+                    _day_id = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("day_id");
+                    Onday_idChanged();
+                }
             }
         }
         private global::System.String _day_id;
@@ -351,6 +353,30 @@ namespace PicPoint.Models
         private global::System.String _trip_id;
         partial void Ontrip_idChanging(global::System.String value);
         partial void Ontrip_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> date
+        {
+            get
+            {
+                return _date;
+            }
+            set
+            {
+                OndateChanging(value);
+                ReportPropertyChanging("date");
+                _date = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("date");
+                OndateChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _date;
+        partial void OndateChanging(Nullable<global::System.DateTime> value);
+        partial void OndateChanged();
 
         #endregion
 
@@ -528,6 +554,30 @@ namespace PicPoint.Models
         private global::System.String _day_id;
         partial void Onday_idChanging(global::System.String value);
         partial void Onday_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                OnnameChanging(value);
+                ReportPropertyChanging("name");
+                _name = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("name");
+                OnnameChanged();
+            }
+        }
+        private global::System.String _name;
+        partial void OnnameChanging(global::System.String value);
+        partial void OnnameChanged();
 
         #endregion
 
@@ -794,30 +844,6 @@ namespace PicPoint.Models
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.Byte[] timestamp
-        {
-            get
-            {
-                return StructuralObject.GetValidValue(_timestamp);
-            }
-            set
-            {
-                OntimestampChanging(value);
-                ReportPropertyChanging("timestamp");
-                _timestamp = StructuralObject.SetValidValue(value, true);
-                ReportPropertyChanged("timestamp");
-                OntimestampChanged();
-            }
-        }
-        private global::System.Byte[] _timestamp;
-        partial void OntimestampChanging(global::System.Byte[] value);
-        partial void OntimestampChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
-        [DataMemberAttribute()]
         public Nullable<global::System.Double> longitude2
         {
             get
@@ -1004,6 +1030,54 @@ namespace PicPoint.Models
         private global::System.String _caption;
         partial void OncaptionChanging(global::System.String value);
         partial void OncaptionChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.DateTime> date
+        {
+            get
+            {
+                return _date;
+            }
+            set
+            {
+                OndateChanging(value);
+                ReportPropertyChanging("date");
+                _date = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("date");
+                OndateChanged();
+            }
+        }
+        private Nullable<global::System.DateTime> _date;
+        partial void OndateChanging(Nullable<global::System.DateTime> value);
+        partial void OndateChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String day_id
+        {
+            get
+            {
+                return _day_id;
+            }
+            set
+            {
+                Onday_idChanging(value);
+                ReportPropertyChanging("day_id");
+                _day_id = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("day_id");
+                Onday_idChanged();
+            }
+        }
+        private global::System.String _day_id;
+        partial void Onday_idChanging(global::System.String value);
+        partial void Onday_idChanged();
 
         #endregion
 
@@ -1151,6 +1225,54 @@ namespace PicPoint.Models
         private global::System.String _trip_name;
         partial void Ontrip_nameChanging(global::System.String value);
         partial void Ontrip_nameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String sound_id
+        {
+            get
+            {
+                return _sound_id;
+            }
+            set
+            {
+                Onsound_idChanging(value);
+                ReportPropertyChanging("sound_id");
+                _sound_id = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("sound_id");
+                Onsound_idChanged();
+            }
+        }
+        private global::System.String _sound_id;
+        partial void Onsound_idChanging(global::System.String value);
+        partial void Onsound_idChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> views
+        {
+            get
+            {
+                return _views;
+            }
+            set
+            {
+                OnviewsChanging(value);
+                ReportPropertyChanging("views");
+                _views = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("views");
+                OnviewsChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _views;
+        partial void OnviewsChanging(Nullable<global::System.Int32> value);
+        partial void OnviewsChanged();
 
         #endregion
 
@@ -1276,6 +1398,30 @@ namespace PicPoint.Models
         private global::System.String _password;
         partial void OnpasswordChanging(global::System.String value);
         partial void OnpasswordChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String email
+        {
+            get
+            {
+                return _email;
+            }
+            set
+            {
+                OnemailChanging(value);
+                ReportPropertyChanging("email");
+                _email = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("email");
+                OnemailChanged();
+            }
+        }
+        private global::System.String _email;
+        partial void OnemailChanging(global::System.String value);
+        partial void OnemailChanged();
 
         #endregion
 

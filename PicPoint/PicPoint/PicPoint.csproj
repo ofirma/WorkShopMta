@@ -43,6 +43,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Device" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -166,14 +167,25 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\CreateTripController.cs" />
+    <Compile Include="Controllers\CreateUserController.cs" />
     <Compile Include="Controllers\DeletePhotoController.cs" />
     <Compile Include="Controllers\DeleteTripController.cs" />
     <Compile Include="Controllers\GetVideosByFilterController.cs" />
     <Compile Include="Controllers\GetVideosOfUserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\LocationsController.cs" />
+    <Compile Include="Controllers\UpdateLocationNameController.cs" />
+    <Compile Include="Controllers\UpdateLocationStoryController.cs" />
+    <Compile Include="Controllers\UpdateMusicForVideoController.cs" />
+    <Compile Include="Controllers\UpdateNextLocationTransportController.cs" />
+    <Compile Include="Controllers\UpdatePictureCaptionController.cs" />
+    <Compile Include="Controllers\VideoController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\OfirController.cs" />
+    <Compile Include="Controllers\SignOutController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\VideoMetadata.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -185,6 +197,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StoreDB.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\TripWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

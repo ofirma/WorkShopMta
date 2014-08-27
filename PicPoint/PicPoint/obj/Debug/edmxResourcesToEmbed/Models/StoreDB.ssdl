@@ -18,12 +18,13 @@
   </EntityContainer>
   <EntityType Name="Days">
     <Key>
-      <PropertyRef Name="day" />
+      <PropertyRef Name="day_id" />
     </Key>
     <Property Name="day" Type="int" Nullable="false" />
     <Property Name="daySummary" Type="varchar" MaxLength="50" />
-    <Property Name="day_id" Type="varchar" MaxLength="50" />
+    <Property Name="day_id" Type="varchar" Nullable="false" MaxLength="50" />
     <Property Name="trip_id" Type="varchar" MaxLength="50" />
+    <Property Name="date" Type="date" />
   </EntityType>
   <EntityType Name="Locations">
     <Key>
@@ -35,6 +36,7 @@
     <Property Name="latitude" Type="float" />
     <Property Name="travelModeToNextLocation" Type="varchar" MaxLength="50" />
     <Property Name="day_id" Type="varchar" MaxLength="50" />
+    <Property Name="name" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="M2MLocationsPhotos">
     <Key>
@@ -53,7 +55,6 @@
     <Property Name="username" Type="varchar" MaxLength="50" />
     <Property Name="photo" Type="image" />
     <Property Name="longitude1" Type="float" />
-    <Property Name="timestamp" Type="timestamp" StoreGeneratedPattern="Computed" />
     <Property Name="longitude2" Type="float" />
     <Property Name="longitude3" Type="float" />
     <Property Name="latitude1" Type="float" />
@@ -62,6 +63,8 @@
     <Property Name="location_id" Type="varchar" MaxLength="50" />
     <Property Name="name" Type="varchar" MaxLength="50" />
     <Property Name="caption" Type="varchar" MaxLength="50" />
+    <Property Name="date" Type="date" />
+    <Property Name="day_id" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="Trips">
     <Key>
@@ -70,6 +73,8 @@
     <Property Name="trip_id" Type="varchar" Nullable="false" MaxLength="50" />
     <Property Name="username" Type="varchar" MaxLength="50" />
     <Property Name="trip_name" Type="varchar(max)" />
+    <Property Name="sound_id" Type="varchar" MaxLength="50" />
+    <Property Name="views" Type="int" />
   </EntityType>
   <EntityType Name="Users">
     <Key>
@@ -77,6 +82,7 @@
     </Key>
     <Property Name="username" Type="varchar" Nullable="false" MaxLength="50" />
     <Property Name="password" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="email" Type="varchar" MaxLength="50" />
   </EntityType>
   <Association Name="FK_Photos_Users">
     <End Role="Users" Type="PicPointDBModel.Store.Users" Multiplicity="0..1" />

@@ -11,21 +11,20 @@ using System.Web.Http;
 
 namespace PicPoint.Controllers
 {
-    public class GetVideosByFilterController : ApiController
+    public class GetVideosByFilterController : Controller
     {
-        public HttpResponseMessage GetVideosOfUser(string filter)
+        public ActionResult GetVideosOfUser(string filter)
         {
-            List<Trips> trips = new List<Trips>();
+            List<Trips> list = DBEntities.Proxy.Trips.Where(x => x.trip_name.Contains(filter)).ToList();
+            List<VideoMetadata> videos = new List<VideoMetadata>();
 
-            foreach (var obj in DBEntities.Proxy.Trips)
+            foreach (var obj in list)
             {
-                if (obj.trip_name.Contains(filter))
-                {
-                    trips.Add(obj);
-                }
+                VideoMetadata video = new VideoMetadata(obj);
+                videos.Add(video);
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, trips, Configuration.Formatters.JsonFormatter);
+            return Json(videos, JsonRequestBehavior.AllowGet);
         }
 
     }

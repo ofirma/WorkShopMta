@@ -55,6 +55,10 @@ public class UploadController : ApiController
                         photo.latitude1 = val[0];
                         photo.latitude2 = val[1];
                         photo.latitude3 = val[2];
+
+                        string date = null;
+                        reader.GetTagValue(ExifTags.DateTime, out date);
+                        photo.date = GetDateFromString(date);
                     }
                     
                     DBEntities.Proxy.Photos.AddObject(photo);
@@ -69,5 +73,18 @@ public class UploadController : ApiController
             });
 
         return task;
+    }
+
+    private DateTime? GetDateFromString(string dateTime)
+    {
+        if (string.IsNullOrEmpty(dateTime))
+        {
+            return null;
+        }
+        string[] strs = dateTime.Split(' ');
+        string[] date = strs[0].Split(':');
+        string[] time = strs[1].Split(':');
+        return new DateTime(int.Parse(date[0]), int.Parse(date[1]), int.Parse(date[2]),
+            int.Parse(time[0]), int.Parse(time[1]), int.Parse(time[2]));
     }
 }

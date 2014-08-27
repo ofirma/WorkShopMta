@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using PicPoint.Models;
 
 namespace PicPoint.Controllers
 {
@@ -16,9 +17,20 @@ namespace PicPoint.Controllers
         }
 
         // GET api/values/5
-        public string Get(int id)
+        public bool Get(string id)
         {
-            return "valsdfue";
+            var obj = DBEntities.Proxy.Users.Where(x => x.username == id);
+            if (obj == null)
+            {
+                Users newUser = Users.CreateUsers(id, "");
+                DBEntities.Proxy.Users.AddObject(newUser);
+                DBEntities.Proxy.SaveChanges();
+            }
+            else
+            {
+                return false;
+            }
+            return true;
         }
 
         // POST api/values
