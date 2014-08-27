@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using PicPoint.Models;
+using System.Web.Helpers;
 
 namespace PicPoint.Controllers
 {
@@ -12,7 +13,7 @@ namespace PicPoint.Controllers
         //
         // GET: /CheckIfUserIsLoggedIn/
 
-        public bool Get()
+        public ActionResult Get()
         {
             HttpCookie cookie = Request.Cookies["CurrentUser"];
             if (cookie != null)
@@ -22,10 +23,10 @@ namespace PicPoint.Controllers
                 if (list != null && list.Count == 1)
                 {
                     if (list[0].password == cookie["Password"])
-                        return true;
+                        return Json(new UserLoggedIn(true, user), JsonRequestBehavior.AllowGet);
                 }
             }
-            return false;
+            return Json(new UserLoggedIn(false, ""), JsonRequestBehavior.AllowGet);
         }
 
     }
