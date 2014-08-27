@@ -170,6 +170,7 @@
     <Compile Include="Controllers\CheckIfUserIsLoggedInController.cs" />
     <Compile Include="Controllers\CreateTripController.cs" />
     <Compile Include="Controllers\CreateUserController.cs" />
+    <Compile Include="Controllers\Default1Controller.cs" />
     <Compile Include="Controllers\DeletePhotoController.cs" />
     <Compile Include="Controllers\DeleteTripController.cs" />
     <Compile Include="Controllers\GetVideosByFilterController.cs" />
