@@ -167,6 +167,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\CheckIfUserIsLoggedInController.cs" />
     <Compile Include="Controllers\CreateTripController.cs" />
     <Compile Include="Controllers\CreateUserController.cs" />
     <Compile Include="Controllers\DeletePhotoController.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Controllers\UpdateMusicForVideoController.cs" />
     <Compile Include="Controllers\UpdateNextLocationTransportController.cs" />
     <Compile Include="Controllers\UpdatePictureCaptionController.cs" />
+    <Compile Include="Controllers\UserLoggedIn.cs" />
     <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\OfirController.cs" />
