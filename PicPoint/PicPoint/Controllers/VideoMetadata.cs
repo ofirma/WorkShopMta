@@ -14,7 +14,7 @@ namespace PicPoint.Controllers
             img = GetPicFromTrip(trip);
             name = trip.trip_name;
             uploader = trip.username;
-            views = trip.views.Value;
+            views = trip.views != null? trip.views.Value: 0;
         }
 
         private string GetPicFromTrip(Trips trip)
