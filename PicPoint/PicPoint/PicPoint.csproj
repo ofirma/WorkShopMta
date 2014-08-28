@@ -201,7 +201,6 @@
       <DependentUpon>StoreDB.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\TripWrapper.cs" />
-    <Compile Include="Models\VideoWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
