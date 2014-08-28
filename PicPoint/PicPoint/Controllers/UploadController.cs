@@ -38,10 +38,16 @@ public class UploadController : ApiController
                     Photos photo = Photos.CreatePhotos(Guid.NewGuid().ToString());
                     FileStream stream = File.OpenRead(file.LocalFileName);
                     byte[] fileBytes = new byte[stream.Length];
+                    string fileName = file.Headers.ContentDisposition.FileName.Remove(0, 1);
+                    fileName = fileName.Remove(fileName.Length - 1, 1);
+                    photo.name = fileName;
 
-                    stream.Read(fileBytes, 0, fileBytes.Length);
-                    stream.Close();
-                    photo.photo = fileBytes;
+                    //stream.Read(fileBytes, 0, fileBytes.Length);
+                    FileStream writer = File.Create(Path.Combine(root, fileName));
+                    writer.Write(fileBytes, 0, fileBytes.Length);
+                    writer.Close();
+                    //stream.Close();
+                    //photo.photo = fileBytes;
 
                     using (var reader = new ExifReader(file.LocalFileName))
                     {

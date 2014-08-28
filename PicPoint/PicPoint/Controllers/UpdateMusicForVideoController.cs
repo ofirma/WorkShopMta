@@ -12,7 +12,7 @@ namespace PicPoint.Controllers
         //
         // GET: /UpdateMusicForVideo/
 
-        public bool Get(string videoId, string soundId)
+        public bool Get(string videoId, int soundId)
         {
             List<Trips> list = DBEntities.Proxy.Trips.Where(x => x.trip_id == videoId).ToList();
             if (list != null && list.Count == 1 && list[0] != null)

@@ -61,13 +61,13 @@ namespace PicPoint.Controllers
             public DateTime Datetime;
         }
 
-        public void Get()
+        public ActionResult Get()
         {
             List<Photos> photos = DBEntities.Proxy.Photos.Where(x => x.trip_id == null).ToList();
 
             if (photos.Count == 0)
             {
-                return;
+                return Json(null, JsonRequestBehavior.AllowGet);
             }
 
 
@@ -75,6 +75,7 @@ namespace PicPoint.Controllers
             Trips trip = Trips.CreateTrips(newTripId);
             string username = Request.Cookies["CurrentUser"]["Username"];
             trip.username = username;
+            trip.sound_id = 0;
             DBEntities.Proxy.AddToTrips(trip);
 
 
@@ -122,6 +123,10 @@ namespace PicPoint.Controllers
                     Locations loc = Locations.CreateLocations(Guid.NewGuid().ToString());
                     loc.day_id = currList[0].photoData.day_id;
                     DBEntities.Proxy.AddToLocations(loc);
+                    foreach (PicWrapper currObj in currList)
+                    {
+                        currObj.photoData.location_id = loc.location_id;
+                    }
                 }
             }
 
@@ -130,6 +135,7 @@ namespace PicPoint.Controllers
 
 
             DBEntities.Proxy.SaveChanges();
+            return Json(newTripId, JsonRequestBehavior.AllowGet);
         }
 
         private List<PicWrapper> DividePhotos(List<Photos> photosOfDay)

@@ -31,15 +31,15 @@ namespace PicPoint.Controllers
     //    public string name;
     //}
 
-    public class VideoController : ApiController
+    public class VideoController : Controller
     {
         //
         // GET: /Locations/
 
-        public List<DayWrapper> GetDays(string id)
+        public ActionResult GetDays(string id)
         {
             TripWrapper trip = new TripWrapper(id);
-                return trip.Days;
+                return  Json(trip.allVideo, JsonRequestBehavior.AllowGet);
         }
 
         private List<Locations> GetLocations(string dayId)

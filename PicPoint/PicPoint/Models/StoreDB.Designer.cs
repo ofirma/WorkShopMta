@@ -19,8 +19,8 @@ using System.Xml.Serialization;
 [assembly: EdmSchemaAttribute()]
 #region EDM Relationship Metadata
 
-[assembly: EdmRelationshipAttribute("PicPointDBModel", "FK_Trips_Users", "Users", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(PicPoint.Models.Users), "Trips", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(PicPoint.Models.Trips), true)]
 [assembly: EdmRelationshipAttribute("PicPointDBModel", "FK_Photos_Users", "Users", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(PicPoint.Models.Users), "Photos", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(PicPoint.Models.Photos), true)]
+[assembly: EdmRelationshipAttribute("PicPointDBModel", "FK_Trips_Users", "Users", System.Data.Metadata.Edm.RelationshipMultiplicity.ZeroOrOne, typeof(PicPoint.Models.Users), "Trips", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(PicPoint.Models.Trips), true)]
 
 #endregion
 
@@ -91,22 +91,6 @@ namespace PicPoint.Models
         /// <summary>
         /// No Metadata Documentation available.
         /// </summary>
-        public ObjectSet<Trips> Trips
-        {
-            get
-            {
-                if ((_Trips == null))
-                {
-                    _Trips = base.CreateObjectSet<Trips>("Trips");
-                }
-                return _Trips;
-            }
-        }
-        private ObjectSet<Trips> _Trips;
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
         public ObjectSet<Users> Users
         {
             get
@@ -167,6 +151,22 @@ namespace PicPoint.Models
             }
         }
         private ObjectSet<Days> _Days;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Trips> Trips
+        {
+            get
+            {
+                if ((_Trips == null))
+                {
+                    _Trips = base.CreateObjectSet<Trips>("Trips");
+                }
+                return _Trips;
+            }
+        }
+        private ObjectSet<Trips> _Trips;
 
         #endregion
 
@@ -178,14 +178,6 @@ namespace PicPoint.Models
         public void AddToM2MLocationsPhotos(M2MLocationsPhotos m2MLocationsPhotos)
         {
             base.AddObject("M2MLocationsPhotos", m2MLocationsPhotos);
-        }
-    
-        /// <summary>
-        /// Deprecated Method for adding a new object to the Trips EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
-        /// </summary>
-        public void AddToTrips(Trips trips)
-        {
-            base.AddObject("Trips", trips);
         }
     
         /// <summary>
@@ -218,6 +210,14 @@ namespace PicPoint.Models
         public void AddToDays(Days days)
         {
             base.AddObject("Days", days);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Trips EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToTrips(Trips trips)
+        {
+            base.AddObject("Trips", trips);
         }
 
         #endregion
@@ -1231,7 +1231,7 @@ namespace PicPoint.Models
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public global::System.String sound_id
+        public Nullable<global::System.Int32> sound_id
         {
             get
             {
@@ -1241,13 +1241,13 @@ namespace PicPoint.Models
             {
                 Onsound_idChanging(value);
                 ReportPropertyChanging("sound_id");
-                _sound_id = StructuralObject.SetValidValue(value, true);
+                _sound_id = StructuralObject.SetValidValue(value);
                 ReportPropertyChanged("sound_id");
                 Onsound_idChanged();
             }
         }
-        private global::System.String _sound_id;
-        partial void Onsound_idChanging(global::System.String value);
+        private Nullable<global::System.Int32> _sound_id;
+        partial void Onsound_idChanging(Nullable<global::System.Int32> value);
         partial void Onsound_idChanged();
     
         /// <summary>
@@ -1434,28 +1434,6 @@ namespace PicPoint.Models
         [XmlIgnoreAttribute()]
         [SoapIgnoreAttribute()]
         [DataMemberAttribute()]
-        [EdmRelationshipNavigationPropertyAttribute("PicPointDBModel", "FK_Trips_Users", "Trips")]
-        public EntityCollection<Trips> Trips
-        {
-            get
-            {
-                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Trips>("PicPointDBModel.FK_Trips_Users", "Trips");
-            }
-            set
-            {
-                if ((value != null))
-                {
-                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Trips>("PicPointDBModel.FK_Trips_Users", "Trips", value);
-                }
-            }
-        }
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [XmlIgnoreAttribute()]
-        [SoapIgnoreAttribute()]
-        [DataMemberAttribute()]
         [EdmRelationshipNavigationPropertyAttribute("PicPointDBModel", "FK_Photos_Users", "Photos")]
         public EntityCollection<Photos> Photos
         {
@@ -1468,6 +1446,28 @@ namespace PicPoint.Models
                 if ((value != null))
                 {
                     ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Photos>("PicPointDBModel.FK_Photos_Users", "Photos", value);
+                }
+            }
+        }
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("PicPointDBModel", "FK_Trips_Users", "Trips")]
+        public EntityCollection<Trips> Trips
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Trips>("PicPointDBModel.FK_Trips_Users", "Trips");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Trips>("PicPointDBModel.FK_Trips_Users", "Trips", value);
                 }
             }
         }
