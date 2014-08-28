@@ -209,6 +209,10 @@
       <DependentUpon>Database1.mdf</DependentUpon>
     </Content>
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Content\editor.html" />
+    <Content Include="Content\main.html" />
+    <Content Include="Content\movie.html" />
+    <Content Include="Content\uploadImages.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
