@@ -10,24 +10,19 @@ using System.Net;
 
 namespace PicPoint.Controllers
 {
-    public class DeleteTripController : ApiController
+    public class DeleteVideoController : Controller
     {
-        public HttpResponseMessage DeletePhoto(string id)
+        public ActionResult DeleteVideo(string id)
         {
-            Trips trip = null;
-            foreach (var obj in DBEntities.Proxy.Trips)
+            List<Trips> list = DBEntities.Proxy.Trips.Where(x => x.trip_id == id).ToList();
+           
+            if (list != null && list.Count == 1)
             {
-                if (obj.trip_id == id)
-                {
-                    trip = obj;
-                }
+                DBEntities.Proxy.Trips.DeleteObject(list[0]);
+                DBEntities.Proxy.SaveChanges();
+                return Json(true, JsonRequestBehavior.AllowGet);
             }
-
-            if (trip != null)
-            {
-                DBEntities.Proxy.Trips.DeleteObject(trip);
-            }
-            return Request.CreateResponse(HttpStatusCode.OK, Configuration.Formatters.JsonFormatter);
+            return Json(false, JsonRequestBehavior.AllowGet);
         }
 
     }

@@ -10,22 +10,22 @@ using System.Net;
 
 namespace PicPoint.Controllers
 {
-    public class GetVideosOfUserController : ApiController
+    public class GetVideosOfUserController : Controller
     {
-        public HttpResponseMessage GetVideosOfUser(string user)
-    {
-        List<Trips> trips = new List<Trips>();
-
-        foreach (var obj in DBEntities.Proxy.Trips)
+        public ActionResult GetVideosOfUser()
         {
-            if (obj.username == user)
-            {
-                trips.Add(obj);
-            }
-        }
+            string username = Request.Cookies["CurrentUser"]["Username"];
+            List<Trips> list = DBEntities.Proxy.Trips.Where(x => x.username == username).ToList();
+            List<VideoMetadata> videos = new List<VideoMetadata>();
 
-        return Request.CreateResponse(HttpStatusCode.OK, trips, Configuration.Formatters.JsonFormatter);
-    }
+            foreach (var obj in list)
+            {
+                VideoMetadata video = new VideoMetadata(obj);
+                videos.Add(video);
+            }
+
+            return Json(videos, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }
