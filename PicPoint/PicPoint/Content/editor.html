@@ -22,31 +22,49 @@
     <script src="js/createDaysTemp.js"></script>
     <script src="js/editor.js"></script>
 
+    <div ng-controller="ExampleController" ng-hide="userLoggedIn" style="position:fixed;z-index: 2147483641;width:100%;height:100%;background:white"></div>
     <div class="container-fluid" ng-controller="ExampleController">
         <div id="locationData" class="locationData">
             <div style="border:0px;position:absolute;right:10px;top:5px">
-                <span class="glyphicon glyphicon-remove-circle" style="font-size:20px;cursor:pointer" onclick="closeLocation(true, true)"></span>
+                <span class="glyphicon glyphicon-remove-circle" style="font-size:20px;cursor:pointer" onclick="closeLocationFromXButton()"></span>
             </div>
-            Location Name: <input id="locationName" type="text" class="form-control" placeholder="Text input">
+            Location Name: <input id="locationName" onkeyup="locationNameChanged()" type="text" class="form-control" placeholder="Text input">
             <br />
+            <input id="showStreetViewCheckBox" type="checkbox" onchange="changeShowStreetView()"/> Show street view
+            <span id="showStreetViewToolTipHolder" class="glyphicon glyphicon-question-sign" style="cursor: pointer"></span>
+            &nbsp;&nbsp;
+            <button id="locationStoryToolTipHolder" onclick="onStoryClick()" type="button" class="btn btn-default btn-sm" style="background-color: #eee">
+                <span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;Location story
+            </button>
+            <div id="showStreetViewToolTipWrapper" style="display:none">
+                <div id="showStreetViewToolTip">
+                    360 Panoramic street view of the location<br/> will be displayed before the pictures
+                </div>
+                <div id="locationStoryToolTip">
+                    Write down a story for the location which<br/>
+                     will be displayed after the location animation is shown
+                </div>
+            </div>
+            <div style="height: 5px"></div>
             <span id="picsNum"></span> Pictures taken here:<br />
             <div id="locationPicsDiv" class="scrollImg">
                 <!-- all images here -->
             </div>
             <br />
-            Set picture caption: <input id="picCaption" type="text"  class="form-control" maxlength="36">
+            <form>
+                Set picture caption: <input id="picCaption" onkeyup="picCatpionManualChange()" type="text" class="form-control" maxlength="36">
+            </form>
             <div style="height:10px"></div>
 
             <div style="width:350px">
                 <img id="selectedImg" src="" class="selectedImg" />
-                <div class="caption">{{ vvv }}</div>
+                <div id="picCaptionView" class="caption"></div>
             </div>
 
             <br />
-            <div id="saveButtons" style="bottom:15px;left:90px;position:absolute">
-                <button type="button" class="btn btn-primary" onclick="saveLocationChanges()">Save</button>
-                <button type="button" class="btn btn-primary" onclick="saveLocationChangesAndClose()">Save & Close</button>
-                <button type="button" class="btn btn-primary" onclick="closeLocation(true, true)">Close</button>
+            <div id="saveButtons" style="bottom:10px;left:130px;position:absolute">
+                <button type="button" class="btn btn-primary" onclick="saveLocationChangesAndClose()">Save</button>
+                <button type="button" class="btn btn-primary" onclick="closeLocationFromXButton()">Close</button>
             </div>
 
         </div>
@@ -54,7 +72,7 @@
             <div style="border:0px;position:absolute;right:10px;top:5px">
                 <span class="glyphicon glyphicon-remove-circle" style="font-size:20px;cursor:pointer" onclick="closeStory()"></span>
             </div>
-            Story to display at the end of the location slide: <textarea class="form-control" placeholder="Text input" style="height:150px"></textarea>
+            Story to display at the end of the location slide: <textarea id="storyTextArea" maxlength="500" class="form-control" placeholder="Text input" style="height:150px"></textarea>
             <br />
             <div id="saveButtons" style="bottom:15px;left:35%;position:absolute">
                 <button type="button" class="btn btn-primary" onclick="saveStoryChanges()">Save</button>
@@ -71,20 +89,18 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Moshe Kerbel</a></li>
-                        <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Help</a></li>
+                        <li><a href="main.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                        <li>
+                            <a href="" id="userOptions"><span class="glyphicon glyphicon-user"></span> {{username}}</a>
+                            <div id="userOptionsToolTipWrapper" style="display: none">
+                                <div style="margin-left:10%" id="userOptionsToolTip">
+                                    <a href="main.html">My Videos</a>
+                                    <div style="border-top:1px solid white;margin-top:6px;margin-bottom:10px"></div>
+                                    <a href="main.html">Log Out</a>
+                                </div>
+                            </div>
+                        </li>
                     </ul>
-                    <form class="form-inline" role="form" style="margin-top:10px">
-                        <div class="form-group">
-                            <input type="text" ng-model="yourName" class="form-control" id="exampleInputEmail2" placeholder="Search..." style="width:400px;height:30px">
-                        </div>
-                        <div class="form-group">
-                            <button type="button" class="btn btn-default" style="height:30px">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -95,36 +111,67 @@
                     <div class="row">
                         <br />
                         <div id="dayWrapper{{ dayIndex }}" class="col-xs-12 col-md-12;">
-
-                            <div id="day{{ dayIndex }}Closed" title="{{ dayIndex }}" class="day" onclick="openDay(this.title)">
-                                <span style="font-size: 20px;">Day{{ day.day }}</span><br />
+                            <div id="day{{ dayIndex }}Closed" lang="{{ dayIndex }}" class="day" onclick="openDay(this.lang)">
+                                <span style="font-size: 20px;">{{ day.day }}</span><br />
                                 {{ day.locations.length }} Locations<br />
                                 {{ day.picsNum }} Pictures
                             </div>
 
-                            <div id="day{{ dayIndex }}Opened" title="{{ dayIndex }}" class="daySelected" onclick="closeDay(this.title)">
-                                <span style="font-weight:bold;">Day{{ day.day }}</span>
+                            <div id="day{{ dayIndex }}Opened" lang="{{ dayIndex }}" class="daySelected" onclick="closeDay(this.lang)">
+                                <span style="font-weight:bold;">{{ day.day }}</span>
                             </div>
 
-                            <div id="locationsWrapper" style="display:none">
-                                <div ng-repeat="location in day.locations" ng-init="locationIndex = $index">
+                            <div id="locationsWrapperForDay{{ dayIndex }}" style="display:none">
+                                <div ng-repeat="location in day.locations">
                                     <div class="line-break"></div>
-                                    <div id="location{{ locationIndex }}" 
-                                         title="{{ location }}" 
-                                         class="location" 
-                                         onclick="onLocationClick(this.title)">
+                                    <div id="location{{ location.id }}"
+                                         class="location"
+                                         lang="{{ location }}"
+                                         onclick="onLocationClick(this.lang)">
                                         {{ location.name }} ({{ location.pics.length }} Pictures)
-                                    </div>     
+                                    </div>
+                                    <div style="height:3px"></div>
+                                    <div ng-show="location.travelModeToNextLocation.length > 0">
 
+                                        <center>
+                                            <span id="day{{ dayIndex }}location{{location.id}}directionsTooltipIcon" class="glyphicon glyphicon-circle-arrow-down" style="cursor: pointer"></span>
+                                        </center>
+
+                                        <div id="toolTipWrapperNextLocation" style="display: none">
+                                            <div id="day{{ dayIndex }}location{{location.id}}directionsTooltip">
+                                                <span>
+                                                    Please choose the way
+                                                    <br />
+                                                    you got to the next location:
+                                                </span>
+                                                <div style="height:10px">
+                                                </div>
+                                                <form class="form-inline" role="form">
+                                                    <select id="transportType" class="form-control">
+                                                        <option id="1">Walking</option>
+                                                        <option id="2">Public transport‏</option>
+                                                        <option id="3">Car</option>
+                                                    </select>
+                                                    &nbsp;&nbsp;
+                                                    <!-- todo: move to ajax m12 and others!-->
+                                                    <input id="m12" type="hidden" value="{{ dayIndex }}" />
+                                                    <input id="m13" type="hidden" value="{{location.id}}" />
+                                                    <button id="save{{ dayIndex }}{{location.id}}" type="button" class="btn btn-default btn-sm" onclick="saveNextDirections(m12.value, m13.value, transportType.selectedIndex)">Save</button>
+
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                     <div ng-repeat="singlePic in location.pics" ng-init="picIndex = $index" style="display:none">
-                                        <img id="location{{ locationIndex }}img{{ picIndex }}"
+                                        <img id="location{{ location.id }}img{{ picIndex }}"
                                              onmouseover="onImageMouseOver(this)"
                                              onmouseout="onImageMouseOut(this)"
                                              onclick="onImageClick(this)"
                                              src="resources/Images/{{ singlePic.name }}"
                                              title="{{ singlePic.caption }}"
-                                             class="smallPic" />                                        
-                                    </div> 
+                                             class="smallPic" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -138,83 +185,67 @@
                     </div>
                     <div>
                         <div class="collapse navbar-collapse">
-                            <ul class="nav navbar-nav">
-                                <li id="storyNoLocationSelected">
-                                    <button type="button" class="btn btn-default btn-lg">
-                                        <span class="glyphicon glyphicon-list-alt"></span> Story
-                                    </button>
-                                </li>
-                                <li id="storyLocationSelected" style="display:none">
-                                    <button onclick="onStoryClick()" type="button" class="btn btn-default btn-lg">
-                                        <span class="glyphicon glyphicon-list-alt"></span> Story
-                                    </button>
-                                </li>
-                                <li>&nbsp;&nbsp;</li>
-                                <li>
-                                    <button type="button" class="btn btn-default btn-lg">
-                                        <span class="glyphicon glyphicon-map-marker"></span> Recommendation
-                                    </button>
-                                </li>
-                                <li>&nbsp;&nbsp;</li>
+                            <ul class="nav navbar-nav">                               
                                 <li id="soundsTooltip">
                                     <button type="button" class="btn btn-default btn-lg">
                                         <span class="glyphicon glyphicon-music"></span> Music
                                     </button>
                                     <div id="toolTipWrapper1" style="display: none">
                                         <div id="backgroundMusicTooltip">
-                                            <span>
-                                                Background music for the video
-                                            </span>
-                                            <div style="height:10px"></div>
-                                            <form class="form-inline" role="form">
-                                                <select class="form-control" onchange="changePreviewSound()">
-                                                    <option>None</option>
-                                                    <option value="sounds/1.mp3">Sunny Beach</option>
-                                                    <option value="sounds/2.mp3">Blue Atlantic</option>
-                                                </select>
-                                                &nbsp;&nbsp;
-                                                <button type="button" class="btn btn-default btn-sm" onclick="saveDirections()">Save</button>
-                                            </form>
-                                            <div style="height:10px"></div>
-                                            <div>
-                                                Preview:
+                                            <div id="normalMusicTP">
+                                                <span>
+                                                    Background music for the video
+                                                </span>
                                                 <div style="height:10px"></div>
-                                                <div id="moses">
-                                                    <audio controls style="width:210px">
-                                                        <source id="soundController" src="sounds/12.mp3" type="audio/mpeg">
-                                                    </audio>
+                                                <form class="form-inline" role="form" ng-controller="ExampleController">
+                                                    <select id="backgroundMusicDropDown" class="form-control" onchange="changePreviewSound(backgroundMusicDropDown.selectedIndex)">
+                                                        <option value="-1">None</option>
+                                                        <option ng-repeat="musicOption in musicOptions" value="{{musicOption.id}}">{{musicOption.name}}</option>
+                                                    </select>
+                                                    &nbsp;&nbsp;
+                                                    <button type="button" class="btn btn-default btn-sm" onclick="saveBackgroundMusic(backgroundMusicDropDown.selectedIndex)">Save</button>
+                                                </form>
+                                                <div style="height:10px"></div>
+                                                <div>
+                                                    Preview:
+                                                    <div style="height:10px"></div>
+                                                    <div id="mySoundController">
+                                                        <audio controls style="width:210px">
+                                                            <source id="soundController" src="" type="audio/mpeg">
+                                                        </audio>
+                                                    </div>
                                                 </div>
+                                            </div>
+                                            <div id="backgroundMusicTooltipForSuccesfullSave" style="display: none">
+                                                Saved succesfully
                                             </div>
                                         </div>
                                     </div>
                                 </li>
                                 <li>&nbsp;&nbsp;</li>
                                 <li>
-                                    <button type="button" class="btn btn-default btn-lg" id="my-tooltip">
-                                        <span class="glyphicon glyphicon-circle-arrow-right"></span> Next Location
+                                    <button type="button" class="btn btn-default btn-lg" onclick="onPlayVideoClick()">
+                                        <span class="glyphicon glyphicon-facetime-video"></span> Play Video
                                     </button>
-                                    <div id="toolTipWrapperNextLocation" style="display: none">
-                                        <div id="nextLocationToolTip">
-                                            <span>
-                                                Please choose the way
-                                                <br />
-                                                you got to the next location:
-                                            </span>
-                                            <div style="height:10px">
-                                            </div>
-                                            <form class="form-inline" role="form">
-                                                <select onchange="saveDirections()" class="form-control">
-                                                    <option>Walking</option>
-                                                    <option>Public transport‏</option>
-                                                    <option>Car</option>
-                                                </select>
-                                                &nbsp;&nbsp;
-                                                <button type="button" class="btn btn-default btn-sm">Save</button>
-                                            </form>
-                                        </div>
-                                    </div>
                                 </li>
                                 <li>&nbsp;&nbsp;</li>
+                                <li>
+                                    <button id="shareVideoToolTipHolder" type="button" class="btn btn-default btn-lg">
+                                        <span class="glyphicon glyphicon-globe"></span> Share Video
+                                    </button>
+
+                                    <div id="shareVideoToolTipHolderWrapper" style="display:none">
+                                        <div id="shareVideoToolTip">
+                                            <center>Link to share your video with others</center>
+                                            <div style="height:5px"></div>
+
+                                            <div class="form-inline">
+                                                <input type="text" class="form-control" style="width:300px" value="http://www.blablabalba.com/videoId=343" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                        
+                                </li>
                             </ul>
                         </div><!--/.nav-collapse -->
                     </div>
@@ -224,5 +255,7 @@
     </div>
     <div id="tempPics" style="display:none">
     </div>
+    <input id="helperForFoucs" type="text" ng-model="yourName">
+    <input id="helperForFoucs2" type="text" ng-model="yourName">
 </body>
 </html>

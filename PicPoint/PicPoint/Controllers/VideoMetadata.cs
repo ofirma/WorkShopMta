@@ -11,7 +11,7 @@ namespace PicPoint.Controllers
         public VideoMetadata(Trips trip)
         {
             id = trip.trip_id;
-            img = GetPicFromTrip(trip);
+            //img = GetPicFromTrip(trip);
             name = trip.trip_name;
             uploader = trip.username;
             views = trip.views != null? trip.views.Value: 0;

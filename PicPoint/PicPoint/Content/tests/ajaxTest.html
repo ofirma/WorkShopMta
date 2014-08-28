@@ -7,9 +7,11 @@
 </head>
 
 <body ng-app="myapp">
-
     <div ng-controller="MyController">
-        <button ng-click="myData.doClick(item, $event)">Send AJAX Request</button>
+        <br />
+        Data from server: {{myData.fromServer[0]}}
+    </div>
+    <div ng-controller="MyController">
         <br />
         Data from server: {{myData.fromServer[0]}}
     </div>
@@ -20,7 +22,7 @@
                 $scope.myData = {};
                 $scope.myData.doClick = function (item, event) {
 
-                    var responsePromise = $http.get("http://localhost:4697/Api/test");
+                    var responsePromise = $http.get("http://localhost:4697/Api/values");
 
                     responsePromise.success(function (data, status, headers, config) {
                         $scope.myData.fromServer = data;
@@ -29,6 +31,7 @@
                         alert("AJAX failed!");
                     });
                 }
+                $scope.myData.doClick();
             });
     </script>
 

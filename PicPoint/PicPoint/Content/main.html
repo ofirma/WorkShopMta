@@ -1,87 +1,171 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
-  <head>
+<!-- todo!!!! - change jquery and angular to local scripts on all pages!-->
+<html lang="en" ng-app="app">
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Animated Trip</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-  </head>
-  <body>
+    <link href="css/tipped/tooltipster.css" rel="stylesheet">
+    <!--auto complete -->
+    <link rel="stylesheet" href="js/autocomplete/style/style.css">
+    <link rel="stylesheet" href="js/autocomplete/style/autocomplete.css">
+    <style type="text/css">
+        body {
+            overflow: hidden;
+        }
+
+        .menuOption {
+            cursor: pointer;
+            color: #428bca;
+            height: 30px;
+            border: 1px solid #ccc;
+            background-color: white;
+            vertical-align: middle;
+            padding: 2px;
+            font-weight: bold;
+        }
+
+        .menuOptionSelected {
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            height: 30px;
+            border: 1px solid #ccc;
+            background-color: #428bca;
+            vertical-align: middle;
+            padding: 2px;
+        }
+
+        .menuOptionSelected:hover {
+            border-color:#333;
+        }
+
+        .menuOption:hover {
+            border-color: #333;
+        }
+
+        .my-custom-theme {
+            border-radius: 5px;
+            border: 2px solid #000;
+            background: #333;
+            color: white;
+            z-index: 2147483640;
+        }
+
+        .my-custom-themeNoBorder {
+            border-radius: 5px;
+            border: 2px solid #000;
+            border-top: 0px;
+            border-right: 0px;
+            border-left: 0px;
+            background: #222;
+            color: white;
+            z-index: 2147483640;
+        }
+            /* Use this next selector to style things like font-size and line-height: */
+            .my-custom-themeNoBorder .tooltipster-content {
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+                line-height: 16px;
+                padding: 8px 10px;
+                color: white;
+            }
+
+                .my-custom-themeNoBorder .tooltipster-content a {
+                    font-size: 13px;
+                    color: white;
+                }
+        /* Use this next selector to style things like font-size and line-height: */
+        .my-custom-theme .tooltipster-content {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 16px;
+            padding: 8px 10px;
+        }
+
+
+    </style>
+</head>
+<body>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap/bootstrap.min.js"></script>
+    <script src="js/tipped/jquery.tooltipster.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.16/angular.min.js"></script>
+    <script type="text/javascript" src="js/autocomplete/script/autocomplete.js"></script>
+    <script type="text/javascript" src="js/searchApp.js"></script>
+    <script type="text/javascript" src="js\jquery-ui-1.11.1.custom\jquery-ui.min.js"></script>
+    <div class="container-fluid">
 
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-    <script>
-        var map;
-        function initialize() {
-            var mapOptions = {
-                zoom: 15,
-                center: new google.maps.LatLng(32.08018, 34.78056)
-            };
-            map = new google.maps.Map(document.getElementById('map-canvas'),
-            mapOptions);
-        }
-
-        google.maps.event.addDomListener(window, 'load', initialize);    
-    </script>
-
-<div class="container-fluid">
-	
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container-fluid">
-        <div class="navbar-header">
-            <div class="navbar-brand" style="color:white">
-	            <span class="glyphicon glyphicon-record"></span> 
-	            Animated Trip
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <div class="navbar-brand" style="color:white">
+                        <span class="glyphicon glyphicon-record"></span>
+                        Animated Trip
+                    </div>
+                    <div class="navbar-brand" style="color:black;font-size:14px;padding-top:12px">
+                        <div ng-controller="MyCtrl" style="width:300px;">
+                            <autocomplete ng-model="result" attr-placeholder="Search..." click-activation="true" data="movies" on-type="doSomething" on-select="doSomethingElse"></autocomplete>
+                        </div>
+                    </div>
+                    <div ng-controller="MyCtrl" class="navbar-brand" style="color:black;font-size:14px;padding-left:2px; padding-top:12px;color:white">
+                        <button class="btn btn-default" type="button" style="height:30px" onclick="changeVideos('')">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="navbar-collapse collapse" ng-controller="myUser">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="main.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                        <li>
+                            <a ng-hide="checkUserLoggedInBool()" href="#signup" data-toggle="modal" data-target=".bs-modal-sm">
+                                <span class="glyphicon glyphicon-user"></span>
+                                Log in / Register
+                            </a>
+                            <a id="userOptions" ng-show="checkUserLoggedInBool()" href="#"><span class="glyphicon glyphicon-user"></span> {{ getUsername() }}</a>
+                            <div id="userOptionsToolTipWrapper" style="display: none">
+                                <div style="margin-left:10%" id="userOptionsToolTip">
+                                    <a style="cursor: pointer" onclick="clickOnTripVideosOptionNativeJs()">My Trip Videos</a>
+                                    <div style="border-top:1px solid white;margin-top:6px;margin-bottom:10px"></div>
+                                    <a ng-click="logOut()" style="cursor: pointer">Log Out</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                </form>
             </div>
         </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-            <li><a href="#"><span class="glyphicon glyphicon-user"></span> Moshe Kerbel</a></li>
-			<li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Help</a></li>
-          </ul>
-            
-            <form class="form-inline" role="form" style="margin-top:10px">
-                <div class="form-group">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="text" class="form-control" id="exampleInputEmail2" placeholder="Search..." style="width:400px;height:30px">
-                </div>
-                <div class="form-group">
-                    <button type="button" class="btn btn-default" style="height:30px">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                </div>
-            </form>
-        </div>
-      </div>
-    </div>  
+    </div>
 
-    <div class="row" style="top:50px;position:relative">
+    <div class="row" style="top:50px;position:relative;padding-left:10px" ng-controller="videosController">
         <div class="col-md-2" style="background-color:#eee;border-right:1px solid black;height:600px">
             <div class="row" style="height:10px"></div>
             <div class="row">
-              <div class="col-xs-12 col-md-12">
-                <div style="height:30px">
-                <a href="#" class="thumbnail" style="border: 1px solid; color: white; font-weight: bold; font-size: 14px; background-color: #428bca; vertical-align: middle !important; ">
-                    <span class="glyphicon glyphicon-facetime-video"></span>
-                    Videos to Watch
-                </a> 
-                </div>     
-              </div>
+                <div class="col-xs-12 col-md-12">
+                    <div style="height:30px">
+                        <div id="videosToWatchOptionDiv" ng-click="clickOnVideosToWatchOption()" class="thumbnail menuOptionSelected">
+                            &nbsp;
+                            <span class="glyphicon glyphicon-facetime-video"></span>
+                            Videos to Watch
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row" style="height:5px"></div>
             <div class="row">
                 <div class="col-xs-12 col-md-12">
                     <div style="height:30px">
-                        <a href="#" class="thumbnail" style="font-weight:bold;font-size:14px;background-color:#fff;vertical-align: middle !important;">
+                        <div id="myTripVideosOptionDiv" ng-click="clickOnTripVideosOption()"  class="thumbnail menuOption">
+                            &nbsp;
                             <span class="glyphicon glyphicon-user"></span>
                             My Trips Videos
-                        </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -109,124 +193,169 @@
             </div>
         </div>
 
-        <div class="col-md-10" style="background-color:#eee;height:600px;padding-left:30px">
+        <div class="col-md-10" style="background-color:#eee;height:600px;padding-left:30px;padding-right:30px">
             <div class="row" style="height:15px"></div>
-            <div class="row">
+            <div ng-show="!checkVideosViewMode()" class="row">
+                <div class="col-xs-12 col-md-12">
+                  
+                        <button type="button" class="btn btn-primary btn-lg" onclick="onCreateNewVideoClick()">Create new trip video</button>
+                  
+                    <div style="height:25px"></div>
+                </div>
+                <div ng-repeat="video in userVideos" ng-init="myIndex=$index">
+                    <div class="col-md-3">
+                        <center>
+                            <span style="font-weight:bold">{{ video.name }}</span>
+                        </center>
+                        <div style="height:130px;">
+                            <div  lang="{{video.id}}" onclick="gotoVideo(this.lang)" style="cursor:pointer;height:130px;border:1px solid black;background-image: url({{ video.img }}); background-size: 100% 100%; background-repeat: no-repeat;" class="thumbnail">
+                            </div>
+                        </div>
+                        <div style="height:5px"></div>
+                        <center>
+                            <button lang="{{video.id}}" type="button" class="btn btn-success btn" onclick="onVideoEditClick(this.lang)"><span class="glyphicon glyphicon-pencil"></span></button>
+                            <button lang="{{video.id}}" type="button" class="btn btn-danger btn" onclick="deleteVideoConfirm(this.lang)"><span class="glyphicon glyphicon-trash"></span></button>
+                            <div id="dialog-confirm" title="Empty the recycle bin?" style="display: none">
+                                <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>These items will be permanently deleted and cannot be recovered. Are you sure?</p>
+                            </div>
+                        </center>
+                    </div>
+                    <div class="col-md-12" ng-show="isGood($index)" style="height:30px"></div>
+                </div>
+            </div>
+            <div ng-show="checkVideosViewMode()" class="row">
                 <div class="col-xs-12 col-md-12">
                     <div style="height:30px">
-                        <div class="thumbnail" style=" color: #428bca; font-weight: bold; font-size: 14px; background-color: white; vertical-align: middle !important; ">
-                            Recommended Trips Videos
+                        <div id="videosResultsTitle" class="thumbnail" style=" color: #428bca; font-weight: bold; font-size: 14px; background-color: white; vertical-align: middle !important; ">
+                            Recommended Trip Videos
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row" style="height:5px"></div>
-            <div class="row" >
-                <div class="col-md-3">
-                    <div style="height:130px">
-                        <div style="height:130px;border:1px solid black;background-image: url(resources/videosPics/1.jpg); background-size: 100% 100%; background-repeat: no-repeat;" class="thumbnail">
-                        </div>
-                    </div>
-                    <span style="font-weight:bold">Amsterdam - 8 days</span>
-                    <br />
-                    <span style="font-size:12px">
-                        by <a href="#">DaveBroox145</a>
-                    </span>
-                    <span style="font-size: 12px;float:right">3456 views</span>
+            <div ng-show="checkVideosViewMode()" class="row">
+                <div ng-show="videosLoading" style="text-align: center">
+                    <div style="height: 200px"></div>
+                    <div><img src="resources\graphics\loading48.gif" /></div>
                 </div>
-                <div class="col-md-3">
-                    <div style="height:130px">
-                        <div style="height: 130px; border: 1px solid black; background-image: url(resources/videosPics/2.jpg); background-size: 100% 100%; background-repeat: no-repeat;" class="thumbnail">
+                <div ng-repeat="video in videos" ng-init="myIndex=$index">
+                    <div class="col-md-3">
+                        <div lang="{{video.id}}" onclick="gotoVideo(this.lang)" style="height:130px;cursor: pointer">
+                            <div style="height:130px;border:1px solid black;background-image: url({{ video.img }}); background-size: 100% 100%; background-repeat: no-repeat;" class="thumbnail">
+                            </div>
                         </div>
-                    </div>
-                    <span style="font-weight:bold">Brazil (Florianapolis) - 23 days</span>
-                    <br />
-                    <span style="font-size:12px">
-                        by <a href="#">DaveBroox145</a>
-                    </span>
-                    <span style="font-size: 12px;float:right">3456 views</span>
-                </div>
-                <div class="col-md-3">
-                    <div style="height:130px">
-                        <div style="height: 130px; border: 1px solid black; background-image: url(resources/videosPics/3.jpg); background-size: 100% 100%; background-repeat: no-repeat;" class="thumbnail">
-                        </div>
-                    </div>
-                    <span style="font-weight:bold">Israel - 20 days</span>
-                    <br />
-                    <span style="font-size:12px">
-                        by <a href="#">DaveBroox145</a>
-                    </span>
-                    <span style="font-size: 12px;float:right">3456 views</span>
-                </div>
-                <div class="col-md-3">
-                    <div style="height:130px">
-                        <div style="height: 130px; border: 1px solid black; background-image: url(resources/videosPics/4.jpg); background-size: 100% 100%; background-repeat: no-repeat;" class="thumbnail">
-                        </div>
-                    </div>
-                    <span style="font-weight:bold">Tennessi (Texas, USA) - 10 days</span>
-                    <br />
-                    <span style="font-size:12px">
-                        by <a href="#">DaveBroox145</a>
-                    </span>
-                    <span style="font-size: 12px;float:right">3456 views</span>
-                </div>
-            </div>
-            <div class="row" style="height:45px"></div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div style="height:130px">
-                        <div style="height: 130px; border: 1px solid black; background-image: url(resources/videosPics/5.jpg); background-size: 100% 100%; background-repeat: no-repeat;" class="thumbnail">
-                        </div>
-                    </div>
-                    <span style="font-weight:bold">Egnland - 3 days</span>
-                    <br />
-                    <span style="font-size:12px">
-                        by <a href="#">DaveBroox145</a>
-                    </span>
-                    <span style="font-size: 12px;float:right">3456 views</span>
-                </div>
-                <div class="col-md-3">
-                    <div style="height:130px">
-                        <div style="height: 130px; border: 1px solid black; background-image: url(resources/videosPics/6.jpg); background-size: 100% 100%; background-repeat: no-repeat;" class="thumbnail">
-                        </div>
-                    </div>
-                    <span style="font-weight:bold">South America - 126 days</span>
-                    <br />
-                    <span style="font-size:12px">
-                        by <a href="#">DaveBroox145</a>
-                    </span>
-                    <span style="font-size: 12px;float:right">3456 views</span>
-                </div>
-                <div class="col-md-3">
-                    <div style="height:130px">
-                        <div style="height: 130px; border: 1px solid black; background-image: url(resources/videosPics/7.jpg); background-size: 100% 100%; background-repeat: no-repeat;" class="thumbnail">
-                        </div>
-                    </div>
-                    <span style="font-weight:bold">Spain - 5 days</span>
-                    <br />
-                    <span style="font-size:12px">
-                        by <a href="#">DaveBroox145</a>
-                    </span>
-                    <span style="font-size: 12px;float:right">3456 views</span>
-                </div>
-                <div class="col-md-3">
-                    <div style="height:130px">
-                        <div style="height: 130px; border: 1px solid black; background-image: url(resources/videosPics/8.jpg); background-size: 100% 100%; background-repeat: no-repeat;" class="thumbnail">
-                        </div>
-                    </div>
-                    <span style="font-weight:bold">Italy - 9 days</span>
-                    <br />
-                    <span style="font-size:12px">
-                        by <a href="#">DaveBroox145</a>
-                    </span>
-                    <span style="font-size: 12px;float:right">3456 views</span>
-                </div>
-            </div>
 
-            
+                        <span style="font-weight:bold">{{ video.name }}</span>
+
+                        <br />
+                        <span style="font-size:12px">
+                            by <span style="color: #428bca">{{ video.uploader }}</span>
+                        </span>
+                        <span style="font-size: 12px;float:right">{{ video.views }} views</span>
+                    </div>
+                    <div class="col-md-12" ng-show="isGood($index)" style="height:30px"></div>
+                </div>
+            </div>
+            <input id="helperForFoucs" type="button" style="width:0px;height:0px" />
+            <input id="helperForFoucs2" type="button" style="width:0px;height:0px" />
+            <div class="row" style="height:45px"></div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade bs-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <br>
+                <div class="bs-example bs-example-tabs">
+                    <ul id="myTab" class="nav nav-tabs">
+                        <li id="signInOption" class="active"><a href="#signin" data-toggle="tab">Log In</a></li>
+                        <li id="regsiterOption" class=""><a href="#signup" data-toggle="tab">Register</a></li>
+                    </ul>
+                </div>
+                <div class="modal-body">
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane fade active in" id="signin">
+                            <form id="signInForm" class="form-horizontal">
+                                <fieldset>
+                                    <!-- Sign In Form -->
+                                    <!-- Text input-->
+                                    <div class="control-group">
+                                        <label class="control-label" for="userid">Username:</label>
+                                        <div class="controls">
+                                            <input required="" id="userid" name="userid" type="text" class="form-control" placeholder="Email">
+                                        </div>
+                                    </div>
+                                    <!-- Password input-->
+                                    <div class="control-group">
+                                        <label class="control-label" for="passwordinput">Password:</label>
+                                        <div class="controls">
+                                            <input required="" id="passwordinput" name="passwordinput" class="form-control" type="password" placeholder="********">
+                                        </div>
+                                    </div>
+                                    <!-- Button -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="signin"></label>
+                                        <div class="controls" ng-controller="myUser">
+                                            <button id="signin" name="signin" class="btn btn-success" ng-click="signIn()">Log In</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                            <div id="signnedInMsg" class="alert alert-success" style="display:none">
+                                <strong>You are now signed in!</strong>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="signup">
+                            <form id="signUpForm" class="form-horizontal">
+                                <fieldset>
+                                    <!-- Sign Up Form -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="Email">Username:</label>
+                                        <div class="controls">
+                                            <input id="registerUsername" name="Email" class="form-control" type="text" placeholder="Username" class="input-large" required="">
+                                        </div>
+                                    </div>
+                                    <!-- Text input-->
+                                    <div class="control-group">
+                                        <label class="control-label" for="Email">Email:</label>
+                                        <div class="controls">
+                                            <input id="registerEmail" name="Email" class="form-control" type="text" placeholder="your@email.com" class="input-large" required="">
+                                        </div>
+                                    </div>
+
+                                    <!-- Password input-->
+                                    <div class="control-group">
+                                        <label class="control-label" for="password">Password:</label>
+                                        <div class="controls">
+                                            <input id="registerPassword" name="password" class="form-control" type="password" placeholder="********" class="input-large" required="">
+                                        </div>
+                                    </div>
+
+                                    <!-- Button -->
+                                    <div class="control-group">
+                                        <label class="control-label" for="confirmsignup"></label>
+                                        <div class="controls">
+                                            <button id="confirmsignup" name="confirmsignup" class="btn btn-success" onclick="signUp()">Register</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                            <div id="signedUpMsg" class="alert alert-success" style="display:none">
+                                <strong>You are now signed in!</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <center>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </center>
+                </div>
+            </div>
         </div>
     </div>
 
-</div>
-  </body>
+</body>
 </html>

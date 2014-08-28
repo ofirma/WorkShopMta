@@ -1,0 +1,37 @@
+<br>
+<div class="container">
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Panel title</h3>
+                    <span class="pull-right">
+                        <!-- Tabs -->
+                        <ul class="nav panel-tabs">
+                            <li class="active"><a href="#tab1" data-toggle="tab">Tab 1</a></li>
+                            <li><a href="#tab2" data-toggle="tab">Tab 2</a></li>
+                            <li><a href="#tab3" data-toggle="tab">Tab 3</a></li>
+                            <li><a href="#tab4" data-toggle="tab">Tab 4</a></li>
+                        </ul>
+                    </span>
+                </div>
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab1">
+                            dsfdsfsdf
+                        </div>
+                        <div class="tab-pane" id="tab2">
+                            sdfsdf
+                        </div>
+                        <div class="tab-pane" id="tab3">
+                            sdf
+                        </div>
+                        <div class="tab-pane" id="tab4">
+                            dsfdsfdsfdsdfsdsf
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
