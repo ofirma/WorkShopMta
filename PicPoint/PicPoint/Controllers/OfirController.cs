@@ -21,7 +21,7 @@ namespace PicPoint.Controllers
             catch (Exception ex)
             {
                 
-                return Json(ex, JsonRequestBehavior.AllowGet);
+                return Json(ex.InnerException, JsonRequestBehavior.AllowGet);
             }
             
             return Json(obj, JsonRequestBehavior.AllowGet);
