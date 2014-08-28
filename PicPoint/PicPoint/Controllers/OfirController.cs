@@ -11,12 +11,19 @@ namespace PicPoint.Controllers
     public class OfirController : Controller
     {
 
-        public ActionResult Get(string a)
+        public ActionResult Get()
         {
-            JsonResult json = new JsonResult();
-            json.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-            json.Data = "FSDFSD";
-            return json;
+            int obj = 0;
+            try
+            {
+                obj = DBEntities.Proxy.Users.ToList().Count;
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+            
+            return Json(obj, JsonRequestBehavior.AllowGet);
         }
 
     }
