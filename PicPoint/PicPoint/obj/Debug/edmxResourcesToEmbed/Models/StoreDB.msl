@@ -10,17 +10,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Trips">
-      <EntityTypeMapping TypeName="PicPointDBModel.Trips">
-        <MappingFragment StoreEntitySet="Trips">
-          <ScalarProperty Name="views" ColumnName="views" />
-          <ScalarProperty Name="sound_id" ColumnName="sound_id" />
-          <ScalarProperty Name="trip_name" ColumnName="trip_name" />
-          <ScalarProperty Name="username" ColumnName="username" />
-          <ScalarProperty Name="trip_id" ColumnName="trip_id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Users">
       <EntityTypeMapping TypeName="PicPointDBModel.Users">
         <MappingFragment StoreEntitySet="Users">
@@ -72,6 +61,17 @@
           <ScalarProperty Name="day_id" ColumnName="day_id" />
           <ScalarProperty Name="daySummary" ColumnName="daySummary" />
           <ScalarProperty Name="day" ColumnName="day" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Trips">
+      <EntityTypeMapping TypeName="PicPointDBModel.Trips">
+        <MappingFragment StoreEntitySet="Trips">
+          <ScalarProperty Name="views" ColumnName="views" />
+          <ScalarProperty Name="sound_id" ColumnName="sound_id" />
+          <ScalarProperty Name="trip_name" ColumnName="trip_name" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="trip_id" ColumnName="trip_id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

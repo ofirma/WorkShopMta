@@ -73,7 +73,7 @@
     <Property Name="trip_id" Type="varchar" Nullable="false" MaxLength="50" />
     <Property Name="username" Type="varchar" MaxLength="50" />
     <Property Name="trip_name" Type="varchar(max)" />
-    <Property Name="sound_id" Type="varchar" MaxLength="50" />
+    <Property Name="sound_id" Type="int" />
     <Property Name="views" Type="int" />
   </EntityType>
   <EntityType Name="Users">
