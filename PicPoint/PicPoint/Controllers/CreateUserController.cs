@@ -24,6 +24,11 @@ namespace PicPoint.Controllers
                 newUser.email = email;
                 DBEntities.Proxy.Users.AddObject(newUser);
                 DBEntities.Proxy.SaveChanges();
+                HttpCookie myCookie = new HttpCookie("CurrentUser");
+                myCookie["Username"] = username;
+                myCookie["Password"] = password;
+                myCookie.Expires = DateTime.Now.AddDays(1d);
+                Response.Cookies.Add(myCookie);
             }
             else
             {
