@@ -7,6 +7,9 @@ namespace PicPoint.Models
 {
     public class LocationWrapper
         {
+        public LocationWrapper()
+        {
+        }
             public LocationWrapper(Locations locData)
             {
                 id = locData.location_id;
@@ -72,11 +75,18 @@ namespace PicPoint.Models
         {
             public string caption;
             public string name;
+            public string id;
+
+            public PhotoWrapper()
+            {
+
+            }
 
             public PhotoWrapper(Photos currPic)
             {
-                caption = currPic.caption;
-                name = currPic.name;
+                    caption = currPic.caption;
+                    name = currPic.name;
+                    id = currPic.photo_id;
             }
         }
     public class TripWrapper

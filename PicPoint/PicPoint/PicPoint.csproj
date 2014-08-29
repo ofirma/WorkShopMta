@@ -177,7 +177,7 @@
     <Compile Include="Controllers\GetVideosOfUserController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IncViewsForVideoController.cs" />
-    <Compile Include="Controllers\UpdateLocationNameController.cs" />
+    <Compile Include="Controllers\UpdateLocationController.cs" />
     <Compile Include="Controllers\UpdateLocationStoryController.cs" />
     <Compile Include="Controllers\UpdateMusicForVideoController.cs" />
     <Compile Include="Controllers\UpdateNextLocationTransportController.cs" />
