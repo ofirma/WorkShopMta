@@ -9,7 +9,7 @@ namespace PicPoint.Models
         {
             public LocationWrapper(Locations locData)
             {
-                id = locData.day_id;
+                id = locData.location_id;
                 latitude = locData.latitude;
                 longitude = locData.longitude;
                 travelModeToNextLocation = locData.travelModeToNextLocation;

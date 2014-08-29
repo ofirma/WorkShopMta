@@ -41,9 +41,15 @@ public class UploadController : ApiController
                     string fileName = file.Headers.ContentDisposition.FileName.Remove(0, 1);
                     fileName = fileName.Remove(fileName.Length - 1, 1);
                     photo.name = fileName;
+                    photo.caption = "";
 
                     //stream.Read(fileBytes, 0, fileBytes.Length);
-                    FileStream writer = File.Create(Path.Combine(root, fileName));
+                    string picPath = Path.Combine(root, "Pictures");
+                    if (!Directory.Exists(picPath))
+                    {
+                        Directory.CreateDirectory(picPath);
+                    }
+                    FileStream writer = File.Create(Path.Combine(root,"Pictures", fileName));
                     writer.Write(fileBytes, 0, fileBytes.Length);
                     writer.Close();
                     //stream.Close();

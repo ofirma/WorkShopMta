@@ -122,6 +122,10 @@ namespace PicPoint.Controllers
                 {
                     Locations loc = Locations.CreateLocations(Guid.NewGuid().ToString());
                     loc.day_id = currList[0].photoData.day_id;
+                    loc.travelModeToNextLocation = "WALKING";
+                    loc.longitude = currList[0].photoData.longitude3;
+                    loc.latitude = currList[0].photoData.latitude3;
+                    loc.story = "";
                     loc.name = GetRandomCity();
                     DBEntities.Proxy.AddToLocations(loc);
                     foreach (PicWrapper currObj in currList)
