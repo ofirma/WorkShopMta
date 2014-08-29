@@ -16,7 +16,7 @@
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.16/angular.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap/bootstrap.min.js"></script>
     <script src="js/tipped/jquery.tooltipster.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     <script src="js/createDaysTemp.js"></script>
@@ -122,7 +122,7 @@
                             </div>
 
                             <div id="locationsWrapperForDay{{ dayIndex }}" style="display:none">
-                                <div ng-repeat="location in day.locations">
+                                <div ng-repeat="location in day.locations" ng-init="myLocationIndex = $index">
                                     <div class="line-break"></div>
                                     <div id="location{{ location.id }}"
                                          class="location"
@@ -131,7 +131,7 @@
                                         {{ location.name }} ({{ location.pics.length }} Pictures)
                                     </div>
                                     <div style="height:3px"></div>
-                                    <div ng-show="location.travelModeToNextLocation.length > 0">
+                                    <div ng-show="myLocationIndex < day.locations.length-1">
 
                                         <center>
                                             <span id="day{{ dayIndex }}location{{location.id}}directionsTooltipIcon" class="glyphicon glyphicon-circle-arrow-down" style="cursor: pointer"></span>
@@ -147,16 +147,16 @@
                                                 <div style="height:10px">
                                                 </div>
                                                 <form class="form-inline" role="form">
-                                                    <select id="transportType" class="form-control">
-                                                        <option id="1">Walking</option>
-                                                        <option id="2">Public transport‏</option>
-                                                        <option id="3">Car</option>
+                                                    <select id="transportType_day{{ dayIndex }}location{{location.id}}" class="form-control">
+                                                        <option id="0">Walking</option>
+                                                        <option id="1">Public transport‏</option>
+                                                        <option id="2">Car</option>
                                                     </select>
                                                     &nbsp;&nbsp;
                                                     <!-- todo: move to ajax m12 and others!-->
                                                     <input id="m12" type="hidden" value="{{ dayIndex }}" />
                                                     <input id="m13" type="hidden" value="{{location.id}}" />
-                                                    <button id="save{{ dayIndex }}{{location.id}}" type="button" class="btn btn-default btn-sm" onclick="saveNextDirections(m12.value, m13.value, transportType.selectedIndex)">Save</button>
+                                                    <button id="save{{ dayIndex }}{{location.id}}" type="button" class="btn btn-default btn-sm" onclick="saveNextDirections(m12.value, m13.value)">Save</button>
 
                                                 </form>
                                             </div>
@@ -168,7 +168,7 @@
                                              onmouseover="onImageMouseOver(this)"
                                              onmouseout="onImageMouseOut(this)"
                                              onclick="onImageClick(this)"
-                                             src="resources/Images/{{ singlePic.name }}"
+                                             src="resources/images/{{ singlePic.name }}"
                                              title="{{ singlePic.caption }}"
                                              class="smallPic" />
                                     </div>

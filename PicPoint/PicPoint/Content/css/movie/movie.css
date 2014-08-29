@@ -26,20 +26,11 @@ border: 10px solid black;
 border-radius: 16px;
 border-top-left-radius:16px;
 border-top-right-radius:16px;		
-}	
-
-.panoForLocation{
-
-width: 600px;
-height: 375px;
-border: 1px solid black;
-	
-}	
-
+}		  
 .msg{
 position:fixed;
 width: 400px;
-height: 290px;
+min-height: 250px;
 
 z-index: 2147483640;
 display:none;
@@ -59,22 +50,6 @@ border-radius: 16px;
 border-top-left-radius:16px;
 border-top-right-radius:16px;		
 }
-
-.locationFullData{
-    position:fixed;
-    width: 600px;
-    height: 450px;
-    padding-top:15px;
-    z-index: 2147483640;
-    display:none;
-    font-family: arial;
-    font-size: 16px;
-    color: black;
-    text-align: center;
-
-	
-}
-
 .panoInfo{
 width: 400px;
 height: 100px;

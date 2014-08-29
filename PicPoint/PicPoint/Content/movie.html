@@ -5,18 +5,9 @@
     <meta charset="utf-8">
     <title></title>
 
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">    
-    
-    
     <link rel="stylesheet" href="css/movie/movie.css" />
-    <link rel="stylesheet" href="css/movie/movieLocationTabs.css" />
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     <script src="js/movie/async.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
@@ -26,7 +17,6 @@
 
     <script>
 
-        var globalFullDataCallback;
         var DRIVING = "Driving";
         var TRANSIT = "Transit";
         var WALKING = "Walking";
@@ -39,7 +29,7 @@
         var days = [];
 
         $(document).ready(function () {
-
+            
             $.ajax({
                 type: 'GET',
                 url: 'http://jsonstub.com/api/getVideoFullData',
@@ -200,43 +190,6 @@
                     }, 500);
                 }
             }, 1);
-        }
-
-        function showLocationFullData(name, currentLatLang, nextLocationLatLang, travelMode, pics, callback) {
-            console.log('show location full data');
-            console.log(name);
-            console.log(currentLatLang);
-            console.log(nextLocationLatLang);
-            console.log(travelMode);
-            console.log(pics);
-            
-            globalFullDataCallback = callback;
-            
-      $("#mosesSlide").responsiveSlides({
-        	  
-        auto: false,
-        pager: false,
-        nav: true,
-        speed: 500,
-        namespace: "callbacks"
-
-      });
-            
-            var latLang = new google.maps.LatLng(currentLatLang.x, currentLatLang.y);
-            var panoramaOptions = {
-                position: latLang,
-                pov: {
-                    heading: 1,
-                    pitch: 10
-                }
-            };
-            panorama = new google.maps.StreetViewPanorama(document.getElementById('panoForLocation'), panoramaOptions);
-            map.setStreetView(panorama);            
-            
-            
-            $("#locationFullData").show('drop', { direction: "left" }, 500);
-
-            console.log('show location full data method ended');
         }
 
         function showPics(latLangParam, pics, callback) {
@@ -417,16 +370,10 @@
 
             for (var i = 0; i < dayData.locations.length; i++) {
 
-                //var f1 = partial(showStreetView, dayData.locations[i].latLang);
+                var f1 = partial(showStreetView, dayData.locations[i].latLang);
                 var f2 = partial(showPics, dayData.locations[i].latLang, dayData.locations[i].pics);
-                var f21 = partial(showLocationFullData,
-                                  dayData.locations[i].name,
-                                  dayData.locations[i].latLang,
-                                  dayData.locations[i].latLang, // todo: send the real one and handle last location issue
-                                  dayData.locations[i].travelModeToNextLocation,
-                                  dayData.locations[i].pics)
-                //actions.push(f1, f2);
-                actions.push(f21);
+
+                actions.push(f1, f2);
 
                 if ((i + 1) != dayData.locations.length) {
                     var f3 = partial(showRouteForNextLocation,
@@ -442,7 +389,6 @@
         }
 
         function initElements() {
-            setElementToScreenCenter2($('#locationFullData'));
             setElementToScreenCenter($("#msg"));
             setElementToScreenCenter($("#wrapper"));
         }
@@ -488,17 +434,6 @@
             e.css('top', top);
             e.css('left', left);
         }
-        
-        function setElementToScreenCenter2(e) {
-            var w = e.width();
-            var h = e.height();
-            var winH = window.innerHeight;
-            var winW = window.innerWidth;
-
-            var left = (winW - w) / 2;
-            var top = (winH - h) / 2;
-            e.css('left', '22%');
-        }        
 
         var showDaySummary = function (daySummary, callback) {
             
@@ -529,11 +464,6 @@
         function getDaySummaryText(dayData) {
             // todo: get from json
             return "<br/>Day 1 - Tel Aviv<br/><br/>Rabin Square<br/>Dizengoff Square";
-        }
-        
-        function closeLocationDataAndGoToNextLocation(){
-            $("#locationFullData").hide('drop', { direction: "left" }, 500);
-            globalFullDataCallback();
         }
 
         function showPicsSlideShow(numOfPics) {
@@ -577,76 +507,6 @@
     </div>
     <div id="grayCover" class="grayCover"></div>
     <div id="msg" class="msg">
-    </div>
-    <div id="locationFullData" class="locationFullData">
-        
-<div class="container">
-    <div class="row">
-		<div id = "myPopup" class="col-md-8">
-            <div class="panel with-nav-tabs panel-default">
-                <div class="panel-heading">
-                    <div style="font-size:24px;font-weight: bold">Rabin Square</div>
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#tabStreetView" data-toggle="tab">Street View</a></li>
-                            <li><a href="#tabPics" data-toggle="tab">Pictures Taken Here</a></li>
-                            <li><a href="#tabStory" data-toggle="tab">Location Story</a></li>
-                            <li><a href="#tabNavigation" data-toggle="tab">Navigation To Next Location</a></li>
-                        </ul>
-                    </span>
-                </div>
-                <div class="panel-body" style="background-color:#F2F2EB">
-                    <div class="tab-content" >
-                        <div class="tab-pane fade in active" id="tabStreetView" style="height:450px;">
-                            <center>
-                            <div id="panoForLocation" class="panoForLocation">
-                            </div>
-                            <br/>
-                                
-                            <button type="button" class="btn btn-primary btn-lg" onclick="closeLocationDataAndGoToNextLocation()">Continue to next location in video</button>
-                            </center>
-                        </div>
-                        <div class="tab-pane fade" id="tabStory" style="text-align: left">
-                            
-                            
-                            Fear is a powerful motivator. My Grandmother often spoke about how a little booze everyday was good for you. I feel the same way about fear. Not paralyzing dread, but a nagging anxiety—something which maintains a sense of urgency. I never had that sense of urgency with blogging. It was always something I did, or didn’t do. There were no consequences if I didn’t publish. So I would delay, fiddle, get distracted or bored—all of which would result in delay. My self-imposed deadline removed all that. Optimal circumstances didn’t matter. A blog post would be written each week, period. Fear made that happen.
-
-In the first few weeks, failure meant having to drop a grand and deal with the fallout it would cause. At the end of the three months, failure meant not blogging. For most of my time blogging, traffic was a significant priority. I’ve now let that go. Writing has always helped my thinking. It’s the way I try to organize disparate, disorganized thoughts into something comprehendible. Writing more frequently meant that I was forced to crystalize my thoughts more often. I’m not a good writer, but doing this has made me a better one. Writing consistently has been like keeping my muscles in shape. This should have been a consistent activity for the last five years, but better late than never.   
-                            
-                            
-                        </div>
-                        <div class="tab-pane fade" id="tabPics">   
-
-                            
-                            <div class="callbacks_container">
-                              <ul class="rslides" id="mosesSlide">
-                                <li>
-                                  <img src="resources/images/1.jpg" alt="">
-                                  <p class="caption">This is a caption</p>
-                                </li>
-                                <li>
-                                  <img src="resources/images/1.jpg" alt="">
-                                  <p class="caption">This is another caption</p>
-                                </li>
-                                <li>
-                                  <img src="resources/images/1.jpg" alt="">
-                                  <p class="caption">The third caption</p>
-                                </li>
-                              </ul>
- 
-                            </div>                            
-                            
-                            
-
-
-                            
-                        </div>
-                        <div class="tab-pane fade" id="tabNavigation">Default 4</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-	</div>   
-</div>        
     </div>
     <div id="pano" class="pano">
     </div>

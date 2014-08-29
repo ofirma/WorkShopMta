@@ -41,6 +41,7 @@ angular.module('initExample', [])
               type: 'GET',
               url: '/video/getdays/?id=' + myVideoId
           }).done(function (data) {
+              console.log(data);
               $scope.days = data.days;
               $scope.musicOptions = data.musicOptions;
               $scope.backgroundMusic = data.backgroundMusic;
@@ -197,18 +198,16 @@ function onImageMouseOver(img) {
     $('#' + imgId).css('opacity', '0.7');
 }
 function saveLocationChanges() {
-    var v = angular.element(document.querySelector('[ng-controller="ExampleController"]'))
-            .scope().days;
+    var tempRealLocationIndex = getLocationIndexInArrayByLocationId(globalSelectedDayId, globalSelectedLocationId);
+
+    var myLocation = angular.element(document.querySelector('[ng-controller="ExampleController"]'))
+            .scope().days[globalSelectedDayId].locations[tempRealLocationIndex];
     $.ajax({
         type: 'POST',
-        url: 'http://jsonstub.com/saveLocationChanges',
-        data: { "videoId": myVideoId, "days": v },
-        beforeSend: function (request) {
-            request.setRequestHeader('JsonStub-User-Key', '589902c6-c52d-4a38-b0e9-7ae438abe8ce');
-            request.setRequestHeader('JsonStub-Project-Key', 'd1134f6f-6ada-46c1-9855-f35ae2cbcfe8');
-        }
+        url: '/api/updatelocation',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(myLocation)
     }).done(function (data) {
-        //done
     });
 }
 function saveLocationChangesAndClose() {
@@ -241,37 +240,35 @@ function onStoryClick() {
     $(storyData).toggle('fold', 300);
 }
 function saveStoryChanges() {
-    var myStory = document.getElementById('storyTextArea').value;
+    var realLocationId = getLocationIndexInArrayByLocationId(globalSelectedDayId, globalOldSelectedLocationIdRawForJson);
+
+    angular.element(document.querySelector('[ng-controller="ExampleController"]'))
+        .scope().days[globalSelectedDayId].locations[realLocationId].story = document.getElementById('storyTextArea').value;
+
+
+    var locationData = angular.element(document.querySelector('[ng-controller="ExampleController"]'))
+                                                    .scope().days[globalSelectedDayId].locations[realLocationId];
+
     $.ajax({
         type: 'POST',
-        data: { "videoId": myVideoId, "day": globalSelectedDayId, "location": globalOldSelectedLocationIdRawForJson, "story": myStory },
-        url: 'http://jsonstub.com/api/saveStoryChanges',
-        beforeSend: function (request) {
-            request.setRequestHeader('JsonStub-User-Key', '589902c6-c52d-4a38-b0e9-7ae438abe8ce');
-            request.setRequestHeader('JsonStub-Project-Key', 'd1134f6f-6ada-46c1-9855-f35ae2cbcfe8');
-        }
+        url: '/api/updatelocationstory',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(locationData)
     }).done(function (data) {
-
-        var tempRealLocationIndex = getLocationIndexInArrayByLocationId(globalSelectedDayId, globalOldSelectedLocationIdRawForJson);
-
-        angular.element(document.querySelector('[ng-controller="ExampleController"]'))
-            .scope().days[globalSelectedDayId].locations[tempRealLocationIndex].story = document.getElementById('storyTextArea').value;
+        
     });
     closeStory();
 }
 function saveBackgroundMusic(selectedIndex) {
     var selectedMusicOption = document.getElementById('backgroundMusicDropDown').options[selectedIndex].value;
-
+    console.log('selectedMusicOption=' + selectedMusicOption);
+    var dataToSend = { "id": myVideoId, "soundId": selectedMusicOption };
     $.ajax({
         type: 'POST',
-        data: { "videoId": myVideoId, "musicOption": selectedMusicOption },
-        url: 'http://jsonstub.com/api/saveBackgroundMusic',
-        beforeSend: function (request) {
-            request.setRequestHeader('JsonStub-User-Key', '589902c6-c52d-4a38-b0e9-7ae438abe8ce');
-            request.setRequestHeader('JsonStub-Project-Key', 'd1134f6f-6ada-46c1-9855-f35ae2cbcfe8');
-        }
+        url: '/api/updatemusicforvideo',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(dataToSend)
     }).done(function (data) {
-        
     });
 
     
@@ -309,6 +306,12 @@ function runAfterDataFetchFromServer () {
 
             var realLocationId = currentDay.locations[locationIndex].id;
 
+            var dropDownId = 'transportType_day' + dayIndex + 'location' + realLocationId;
+            var transportTypeFromDb = myDays[dayIndex].locations[locationIndex].travelModeToNextLocation;
+
+            transportTypeFromDb = getTransportIndexByName(transportTypeFromDb);
+
+            $('#' + dropDownId)[0].children[transportTypeFromDb].selected = true;
             var toolTipPlaceHolder = "day" + dayIndex + "location" + realLocationId + "directionsTooltipIcon";
 
             var toolTip = "day" + dayIndex + "location" + realLocationId + "directionsTooltip";
@@ -393,16 +396,40 @@ function runAfterDataFetchFromServer () {
     $('#soundsTooltip').tooltipster('content', $('#backgroundMusicTooltip'));
 };
 
-function saveNextDirections(day,location,transportType) {
+function getTransportTypeNameByIndex(transportTypeIndex) {
+    if (transportTypeIndex == 0) {
+        return "WALKING";
+    }
+    else if (transportTypeIndex == 1) {
+        return "PUBLIC TRANSPORT";
+    }
+    else {
+        return "CAR";
+    }
+}
+
+function getTransportIndexByName(transportName) {
+    if (transportName == "WALKING") {
+        return 0;
+    }
+    else if (transportName == "PUBLIC TRANSPORT") {
+        return 1;
+    }
+    else {
+        return 2;
+    }
+}
+
+function saveNextDirections(day, location) {
+    var dropDownId = 'transportType_day' + day + 'location' + location;   
+    var transportTypeIndex = document.getElementById(dropDownId).selectedIndex;
+    var transportType = getTransportTypeNameByIndex(transportTypeIndex);
+    var dataToSend = { "locationId": location, "transportType": transportType };
     $.ajax({
         type: 'POST',
-        data: { "videoId": myVideoId, "day": day, "location": location, "transportType": transportType },
-        url: 'http://jsonstub.com/api/saveNextLocationTransportType',
-        beforeSend: function (request) {
-            request.setRequestHeader('JsonStub-User-Key', '589902c6-c52d-4a38-b0e9-7ae438abe8ce');
-            request.setRequestHeader('JsonStub-Project-Key', 'd1134f6f-6ada-46c1-9855-f35ae2cbcfe8');
-            
-        }
+        url: '/api/UpdateNextLocationTransport',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(dataToSend)
     }).done(function (data) {
         var toolTipPlaceHolder = "day" + day + "location" + location + "directionsTooltipIcon";
         var toolTip = "day" + day + "location" + location + "directionsTooltip";
