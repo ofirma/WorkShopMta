@@ -16,7 +16,7 @@ namespace PicPoint.Controllers
         [System.Web.Mvc.HttpPost]
         public bool Post(LocationWrapper json)
         {
-            List<Locations> list = DBEntities.Proxy.Locations.Where(x => x.location_id == json.story).ToList();
+            List<Locations> list = DBEntities.Proxy.Locations.Where(x => x.location_id == json.id).ToList();
             if (list != null && list.Count == 1 && list[0] != null)
             {
                 list[0].story = json.story;
