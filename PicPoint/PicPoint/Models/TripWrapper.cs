@@ -118,12 +118,14 @@ namespace PicPoint.Models
             musicOptions.Add(new Sound(){id = 2, name = "Acoustic Air", path= "resources/sounds/acoustic.mp3"});
             musicOptions.Add(new Sound(){id = 3, name = "Funky", path= "resources/sounds/funky.mp3"});
             musicOptions.Add(new Sound(){id = 4, name = "Clear Day", path= "resources/sounds/clearDay.mp3"});
-            musicOptions.Add(new Sound() { id = -1, name = "None", path = "" });
+            Sound noneSound = new Sound() { id = -1, name = "None", path = "" };
+            musicOptions.Add(noneSound);
             if (trips != null && trips.Count == 1)
             {
                 List<Sound> sounds = musicOptions.Where(x => x.id == trips[0].sound_id).ToList();
                 backgroundMusic = sounds[0];
             }
+            musicOptions.Remove(noneSound);
             
         }
         public List<DayWrapper> days;

@@ -4,20 +4,22 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using PicPoint.Models;
+using System.Web.Http;
 
 namespace PicPoint.Controllers
 {
-    public class UpdateLocationStoryController : Controller
+    public class UpdateLocationStoryController : ApiController
     {
         //
         // GET: /UpdateLocation/
 
-        public bool Get(string locId, string story)
+        [System.Web.Mvc.HttpPost]
+        public bool Post(LocationWrapper json)
         {
-            List<Locations> list = DBEntities.Proxy.Locations.Where(x => x.location_id == locId).ToList();
+            List<Locations> list = DBEntities.Proxy.Locations.Where(x => x.location_id == json.story).ToList();
             if (list != null && list.Count == 1 && list[0] != null)
             {
-                list[0].story = story;
+                list[0].story = json.story;
                 DBEntities.Proxy.SaveChanges();
                 return true;
             }
