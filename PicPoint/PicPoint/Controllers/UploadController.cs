@@ -43,8 +43,8 @@ public class UploadController : ApiController
                     photo.name = fileName;
                     photo.caption = "";
 
-                    //stream.Read(fileBytes, 0, fileBytes.Length);
-                   ;
+                    stream.Read(fileBytes, 0, fileBytes.Length);
+                   
                    string picPath = Path.Combine(Directory.GetParent(root).FullName, "Content", "resources", "images");
                     if (!Directory.Exists(picPath))
                     {
