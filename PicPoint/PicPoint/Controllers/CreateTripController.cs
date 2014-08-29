@@ -75,7 +75,7 @@ namespace PicPoint.Controllers
             Trips trip = Trips.CreateTrips(newTripId);
             string username = Request.Cookies["CurrentUser"]["Username"];
             trip.username = username;
-            trip.sound_id = 0;
+            trip.sound_id = -1;
             DBEntities.Proxy.AddToTrips(trip);
 
 
@@ -122,6 +122,7 @@ namespace PicPoint.Controllers
                 {
                     Locations loc = Locations.CreateLocations(Guid.NewGuid().ToString());
                     loc.day_id = currList[0].photoData.day_id;
+                    loc.name = GetRandomCity();
                     DBEntities.Proxy.AddToLocations(loc);
                     foreach (PicWrapper currObj in currList)
                     {
