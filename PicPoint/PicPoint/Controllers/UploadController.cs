@@ -44,12 +44,13 @@ public class UploadController : ApiController
                     photo.caption = "";
 
                     //stream.Read(fileBytes, 0, fileBytes.Length);
-                    string picPath = Path.Combine(root, "Pictures");
+                   ;
+                   string picPath = Path.Combine(Directory.GetParent(root).FullName, "Content", "resources", "images");
                     if (!Directory.Exists(picPath))
                     {
                         Directory.CreateDirectory(picPath);
                     }
-                    FileStream writer = File.Create(Path.Combine(root,"Pictures", fileName));
+                    FileStream writer = File.Create(Path.Combine(picPath, fileName));
                     writer.Write(fileBytes, 0, fileBytes.Length);
                     writer.Close();
                     //stream.Close();
