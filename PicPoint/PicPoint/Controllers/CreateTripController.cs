@@ -76,6 +76,7 @@ namespace PicPoint.Controllers
             string username = Request.Cookies["CurrentUser"]["Username"];
             trip.username = username;
             trip.sound_id = -1;
+            trip.views = 0;
             DBEntities.Proxy.AddToTrips(trip);
 
 
