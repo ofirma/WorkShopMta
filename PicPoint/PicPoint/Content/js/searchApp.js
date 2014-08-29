@@ -270,13 +270,11 @@ app.controller('videosController', function ($scope, $http) {
 
     $scope.getUserVideos = function () {
         $scope.userVideos =[];
-        //$http({
-        //    url: '/getvideosofuser/getvideosofuser',
-        //    method: 'GET'
-        //}).success(function (data, status, headers, config) {
-        //    console.log(data);
-        //    $scope.userVideos = data;
-        //});
+
+        var tempLoggedInBool = angular.element(document.querySelector('[ng-controller="myUser"]')).scope().userLoggedIn;
+        if (!tempLoggedInBool) {
+            return;
+        }
 
         $.ajax({
             type: 'GET',
@@ -393,19 +391,14 @@ function signUp() {
 
 function gotoVideo(videoId) {
     incVideoViews(videoId);
-    window.location = 'movie.html?id=' + videoId // todo: go to real url
+    window.open('movie.html?id=' + videoId);
 }
 
 function incVideoViews(videoId) {
     $.ajax({
-        type: 'POST',
-        url: 'http://jsonstub.com/api/incVideoViews', // todo: real stub to check it
-        data: { 'videoId': videoId },
-        beforeSend: function (request) {
-            request.setRequestHeader('JsonStub-User-Key', '589902c6-c52d-4a38-b0e9-7ae438abe8ce');
-            request.setRequestHeader('JsonStub-Project-Key', 'd1134f6f-6ada-46c1-9855-f35ae2cbcfe8');
-        }
+        type: 'GET',
+        url: '/incviewsforvideo/incviews/?videoId='+videoId
     }).done(function (data) {
-
+        alert(data);
     });
 }
