@@ -42,6 +42,7 @@
           <Property Name="travelModeToNextLocation" Type="varchar" MaxLength="50" />
           <Property Name="day_id" Type="varchar" MaxLength="50" />
           <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="showStreetView" Type="int" />
         </EntityType>
         <EntityType Name="M2MLocationsPhotos">
           <Key>
@@ -162,6 +163,7 @@
           <Property Type="String" Name="travelModeToNextLocation" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="day_id" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="name" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="showStreetView" />
         </EntityType>
         <EntityType Name="Photos">
           <Key>
@@ -256,6 +258,7 @@
           <EntitySetMapping Name="Locations">
             <EntityTypeMapping TypeName="PicPointDBModel.Locations">
               <MappingFragment StoreEntitySet="Locations">
+                <ScalarProperty Name="showStreetView" ColumnName="showStreetView" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="day_id" ColumnName="day_id" />
                 <ScalarProperty Name="travelModeToNextLocation" ColumnName="travelModeToNextLocation" />

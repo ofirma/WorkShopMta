@@ -126,6 +126,7 @@ namespace PicPoint.Controllers
                     loc.longitude = currList[0].photoData.longitude3;
                     loc.latitude = currList[0].photoData.latitude3;
                     loc.story = "";
+                    loc.showStreetView = 1;
                     loc.name = GetRandomCity();
                     DBEntities.Proxy.AddToLocations(loc);
                     foreach (PicWrapper currObj in currList)

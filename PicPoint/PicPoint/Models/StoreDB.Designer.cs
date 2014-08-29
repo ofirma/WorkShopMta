@@ -578,6 +578,30 @@ namespace PicPoint.Models
         private global::System.String _name;
         partial void OnnameChanging(global::System.String value);
         partial void OnnameChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> showStreetView
+        {
+            get
+            {
+                return _showStreetView;
+            }
+            set
+            {
+                OnshowStreetViewChanging(value);
+                ReportPropertyChanging("showStreetView");
+                _showStreetView = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("showStreetView");
+                OnshowStreetViewChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _showStreetView;
+        partial void OnshowStreetViewChanging(Nullable<global::System.Int32> value);
+        partial void OnshowStreetViewChanged();
 
         #endregion
 

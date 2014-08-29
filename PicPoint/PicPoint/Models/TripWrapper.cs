@@ -14,6 +14,8 @@ namespace PicPoint.Models
                 longitude = locData.longitude;
                 travelModeToNextLocation = locData.travelModeToNextLocation;
                 name = locData.name;
+                story = locData.story;
+                showStreetView = locData.showStreetView == 1;
                 pics = new List<PhotoWrapper>();
                 foreach (Photos currPic in GetPhotos(locData.location_id))
                 {
@@ -32,6 +34,8 @@ namespace PicPoint.Models
             public string travelModeToNextLocation;
             public List<PhotoWrapper> pics;
             public string name;
+            public string story;
+            public bool showStreetView;
         }
     public class DayWrapper
         {
