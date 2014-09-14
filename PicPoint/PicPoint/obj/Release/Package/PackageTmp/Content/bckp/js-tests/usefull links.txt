@@ -1,0 +1,2 @@
+get name of street by coords:
+http://jsfiddle.net/doktormolle/W3VGN/

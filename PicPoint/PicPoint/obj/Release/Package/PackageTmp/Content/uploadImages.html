@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<html id="ng-app" ng-app="app">
+<head><!---->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TripAlive</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/tipped/tooltipster.css" rel="stylesheet">
+    <link href="css/uploadImages.css" rel="stylesheet">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap/bootstrap.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angularFileUpload/angular-file-upload.js"></script>
+    <script src="js/angularFileUpload/controllers.js"></script>
+    <script src="js/angularFileUpload/directives.js"></script>
+    <script src="js/uploadImages.js"></script>
+</head>
+<body ng-controller="TestController" ng-show="userLoggedIn" ng-file-drop>
+    <script src="js/tipped/jquery.tooltipster.js"></script>
+    <div class="container-fluid">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <div class="navbar-brand" style="color:white">
+                        <span class="glyphicon glyphicon-record"></span>
+                        TripAlive
+                    </div>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="main.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                        <li>
+                            <a href="" id="userOptions"><span class="glyphicon glyphicon-user"></span> {{username}}</a>
+                            <div id="userOptionsToolTipWrapper" style="display: none">
+                                <div style="margin-left:10%" id="userOptionsToolTip">
+                                    <a href="main.html?mode=my">My Trip Videos</a>
+                                    <div style="border-top:1px solid white;margin-top:6px;margin-bottom:10px"></div>
+                                    <a onclick="logout()" style="cursor: pointer">Log Out</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <form class="form-inline" role="form" style="margin-top:10px">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="searchInput" onkeyup="onSearchEnter(event)" placeholder="Search..." style="width:400px;height:30px">
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-default" style="height:30px" onclick="onSearchClick()">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="top:50px;position:relative">
+            <div class="col-md-2" style="background-color:#eee;border-right:1px solid black;height:600px">
+                <div class="row">
+                    <br />
+                    <div class="col-xs-12 col-md-12">
+                        <div style="height:30px">
+                            <a href="main.html" class="thumbnail" style="font-weight:bold;font-size:14px;background-color:#fff;vertical-align: middle !important;">
+                                <span class="glyphicon glyphicon-facetime-video"></span>
+                                Videos to Watch
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height:5px"></div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div style="height:30px">
+                            <a href="main.html?mode=my" class="thumbnail" style="font-weight:bold;font-size:14px;background-color:#fff;vertical-align: middle !important;">
+                                <span class="glyphicon glyphicon-user"></span>
+                                My Trip Videos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height:5px"></div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div style="height:30px">
+                            <div onclick="alert('We just aired now \nThis option and more will be available soon')" class="thumbnail menuOption">
+                                &nbsp;
+                                <span class="glyphicon glyphicon-unchecked"></span>
+                                History
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height:5px"></div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div style="height:30px">
+                            <div onclick="alert('We just aired now \nThis option and more will be available soon')" class="thumbnail menuOption">
+                                &nbsp;
+                                <span class="glyphicon glyphicon-time"></span>
+                                Watch Laster
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- page content-->
+            <div class="col-md-10" style="background-color:#eee;height:600px;padding:0px">
+                <div class="container">
+
+                    <div class="row">
+
+                        <div class="col-md-3">
+
+                            <h3>Select files</h3>
+
+                            <div ng-show="uploader.isHTML5">
+                                <!-- 3. ng-file-over | ng-file-over="className" -->
+                                <div class="well my-drop-zone" ng-file-over>
+                                    Drag files here
+                                </div>
+                            </div>
+
+                            <!-- 2. ng-file-select | ng-file-select="options" -->
+                            <input ng-file-select type="file" multiple />
+
+                        </div>
+
+                        <div class="col-md-8" style="margin-bottom: 40px">
+                            <h2>Uploads images</h2>
+
+                            <div class="scrollLimited">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th width="50%">Name</th>
+                                            <th ng-show="uploader.isHTML5">Size</th>
+                                            <th ng-show="uploader.isHTML5">Progress</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in uploader.queue">
+                                            <td>
+                                                <strong>{{ item.file.name }}</strong>
+                                                <!-- Image preview -->
+                                                <!--auto height-->
+                                                <!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
+                                                <!--auto width-->
+                                                <div ng-show="uploader.isHTML5" ng-thumb="{ file: item.file, height: 100 }"></div>
+                                                <!--fixed width and height -->
+                                                <!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
+                                            </td>
+                                            <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                            <td ng-show="uploader.isHTML5">
+                                                <div class="progress" style="margin-bottom: 0;">
+                                                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                                <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                                <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                            </td>
+                                            <td nowrap>
+                                                <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                                    <span class="glyphicon glyphicon-upload"></span> Upload
+                                                </button>
+                                                <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                                    <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                                                </button>
+                                                <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                    <span class="glyphicon glyphicon-trash"></span> Remove
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <p>
+                                    Queue progress:
+                                    <div class="progress" style="">
+                                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                                    </div>
+                                </p>
+                                <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                                    <span class="glyphicon glyphicon-upload"></span> Upload all
+                                </button>
+                                <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
+                                    <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+                                </button>
+                                <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
+                                    <span class="glyphicon glyphicon-trash"></span> Remove all
+                                </button>
+                                <br /><br />
+                                <button onclick="onContinueToVideoEditorClick()" type="button" class="btn btn-info btn-lg" ng-disabled="!uploader.queue.length">
+                                    <span class="glyphicon glyphicon-facetime-video"></span> Continue To Video Editor
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

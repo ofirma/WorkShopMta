@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="initExample">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TripAlive Editor</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/tipped/tooltipster.css" rel="stylesheet">
+    <link href="css/editor.css" rel="stylesheet">
+</head>
+<body>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/angular.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap/bootstrap.min.js"></script>
+    <script src="js/tipped/jquery.tooltipster.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script src="js/createDaysTemp.js"></script>
+    <script src="js/editor.js"></script>
+
+    <div ng-controller="ExampleController" ng-hide="userLoggedIn" style="position:fixed;z-index: 2147483641;width:100%;height:100%;background:white"></div>
+    <div class="container-fluid" ng-controller="ExampleController">
+        <div id="locationData" class="locationData">
+            <div style="border:0px;position:absolute;right:10px;top:5px">
+                <span class="glyphicon glyphicon-remove-circle" style="font-size:20px;cursor:pointer" onclick="closeLocationFromXButton()"></span>
+            </div>
+            Location Name: <input id="locationName" onkeyup="locationNameChanged()" type="text" class="form-control" placeholder="Text input">
+            <br />
+            <input id="showStreetViewCheckBox" type="checkbox" onchange="changeShowStreetView()"/> Show street view
+            <span id="showStreetViewToolTipHolder" class="glyphicon glyphicon-question-sign" style="cursor: pointer"></span>
+            &nbsp;&nbsp;
+            <button id="locationStoryToolTipHolder" onclick="onStoryClick()" type="button" class="btn btn-default btn-sm" style="background-color: #eee">
+                <span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;Location story
+            </button>
+            <div id="showStreetViewToolTipWrapper" style="display:none">
+                <div id="showStreetViewToolTip">
+                    360 Panoramic street view of the location<br/> will be displayed before the pictures
+                </div>
+                <div id="locationStoryToolTip">
+                    Write down a story for the location which<br/>
+                     will be displayed after the location animation is shown
+                </div>
+            </div>
+            <div style="height: 5px"></div>
+            <span id="picsNum"></span> Pictures taken here:<br />
+            <div id="locationPicsDiv" class="scrollImg">
+                <!-- all images here -->
+            </div>
+            <br />
+            <form>
+                Set picture caption: <input id="picCaption" onkeyup="picCatpionManualChange()" type="text" class="form-control" maxlength="36">
+            </form>
+            <div style="height:10px"></div>
+
+            <div style="width:350px">
+                <img id="selectedImg" src="" class="selectedImg" />
+                <div id="picCaptionView" class="caption"></div>
+            </div>
+
+            <br />
+            <div id="saveButtons" style="bottom:10px;left:130px;position:absolute">
+                <button type="button" class="btn btn-primary" onclick="saveLocationChangesAndClose()">Save</button>
+                <button type="button" class="btn btn-primary" onclick="closeLocationFromXButton()">Close</button>
+            </div>
+
+        </div>
+        <div id="storyData" class="storyData">
+            <div style="border:0px;position:absolute;right:10px;top:5px">
+                <span class="glyphicon glyphicon-remove-circle" style="font-size:20px;cursor:pointer" onclick="closeStory()"></span>
+            </div>
+            Story to display at the end of the location slide: <textarea id="storyTextArea" maxlength="500" class="form-control" placeholder="Text input" style="height:150px"></textarea>
+            <br />
+            <div id="saveButtons" style="bottom:15px;left:35%;position:absolute">
+                <button type="button" class="btn btn-primary" onclick="saveStoryChanges()">Save</button>
+                <button type="button" class="btn btn-primary" onclick="closeStory()">Close</button>
+            </div>
+        </div>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <div class="navbar-brand" style="color:white">
+                        <span class="glyphicon glyphicon-record"></span>
+                        TripAlive
+                    </div>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="main.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                        <li>
+                            <a href="" id="userOptions"><span class="glyphicon glyphicon-user"></span> {{username}}</a>
+                            <div id="userOptionsToolTipWrapper" style="display: none">
+                                <div style="margin-left:10%" id="userOptionsToolTip">
+                                    <a href="main.html">My Videos</a>
+                                    <div style="border-top:1px solid white;margin-top:6px;margin-bottom:10px"></div>
+                                    <a onclick="logout()" style="cursor: pointer">Log Out</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="top:50px;position:relative">
+            <div class="col-md-2" style="background-color:#eee;border-right:1px solid black;height:600px">
+                <div ng-repeat="day in days" ng-init="dayIndex = $index">
+                    <div class="row">
+                        <br />
+                        <div id="dayWrapper{{ dayIndex }}" class="col-xs-12 col-md-12;">
+                            <div id="day{{ dayIndex }}Closed" lang="{{ dayIndex }}" class="day" onclick="openDay(this.lang)">
+                                <span style="font-size: 20px;">{{ day.day }}</span><br />
+                                {{ day.locations.length }} Locations<br />
+                                {{ day.picsNum }} Pictures
+                            </div>
+
+                            <div id="day{{ dayIndex }}Opened" lang="{{ dayIndex }}" class="daySelected" onclick="closeDay(this.lang)">
+                                <span style="font-weight:bold;">{{ day.day }}</span>
+                            </div>
+
+                            <div id="locationsWrapperForDay{{ dayIndex }}" style="display:none">
+                                <div ng-repeat="location in day.locations" ng-init="myLocationIndex = $index">
+                                    <div class="line-break"></div>
+                                    <div id="location{{ location.id }}"
+                                         class="location"
+                                         lang="{{ location }}"
+                                         onclick="onLocationClick(this.lang)">
+                                        {{ location.name }} ({{ location.pics.length }} Pictures)
+                                    </div>
+                                    <div style="height:3px"></div>
+                                    <div ng-show="myLocationIndex < day.locations.length-1">
+
+                                        <center>
+                                            <span id="day{{ dayIndex }}location{{location.id}}directionsTooltipIcon" class="glyphicon glyphicon-circle-arrow-down" style="cursor: pointer"></span>
+                                        </center>
+
+                                        <div id="toolTipWrapperNextLocation" style="display: none">
+                                            <div id="day{{ dayIndex }}location{{location.id}}directionsTooltip">
+                                                <span>
+                                                    Please choose the way
+                                                    <br />
+                                                    you got to the next location:
+                                                </span>
+                                                <div style="height:10px">
+                                                </div>
+                                                <form class="form-inline" role="form">
+                                                    <select id="transportType_day{{ dayIndex }}location{{location.id}}" class="form-control">
+                                                        <option id="0">Walking</option>
+                                                        <option id="1">Public transport‏</option>
+                                                        <option id="2">Car</option>
+                                                    </select>
+                                                    &nbsp;&nbsp;
+                                                    <!-- todo: move to ajax m12 and others!-->
+                                                    <input id="m12" type="hidden" value="{{ dayIndex }}" />
+                                                    <input id="m13" type="hidden" value="{{location.id}}" />
+                                                    <button id="save{{ dayIndex }}{{location.id}}" type="button" class="btn btn-default btn-sm" onclick="saveNextDirections(m12.value, m13.value)">Save</button>
+
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div ng-repeat="singlePic in location.pics" ng-init="picIndex = $index" style="display:none">
+                                        <img id="location{{ location.id }}img{{ picIndex }}"
+                                             onmouseover="onImageMouseOver(this)"
+                                             onmouseout="onImageMouseOut(this)"
+                                             onclick="onImageClick(this)"
+                                             src="resources/images/{{ singlePic.name }}"
+                                             title="{{ singlePic.caption }}"
+                                             class="smallPic" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="mapWrapper" class="col-md-10" style="background-color:#eee;height:600px;padding:0px">
+                <div id="map-canvas" style="width:100%; height:100%"></div>
+                <div class="navbar navbar-default col-md-12" role="navigation" style="background-color:#101010;min-height:60px;position:absolute;left:0px;bottom:0px;margin-bottom:0px">
+                    <div style="height:7px">
+                    </div>
+                    <div>
+                        <div class="collapse navbar-collapse">
+                            <ul class="nav navbar-nav">                               
+                                <li id="soundsTooltip">
+                                    <button type="button" class="btn btn-default btn-lg">
+                                        <span class="glyphicon glyphicon-music"></span> Music
+                                    </button>
+                                    <div id="toolTipWrapper1" style="display: none">
+                                        <div id="backgroundMusicTooltip">
+                                            <div id="normalMusicTP">
+                                                <span>
+                                                    Background music for the video
+                                                </span>
+                                                <div style="height:10px"></div>
+                                                <form class="form-inline" role="form" ng-controller="ExampleController">
+                                                    <select id="backgroundMusicDropDown" class="form-control" onchange="changePreviewSound(backgroundMusicDropDown.selectedIndex)">
+                                                        <option value="-1">None</option>
+                                                        <option ng-repeat="musicOption in musicOptions" value="{{musicOption.id}}">{{musicOption.name}}</option>
+                                                    </select>
+                                                    &nbsp;&nbsp;
+                                                    <button type="button" class="btn btn-default btn-sm" onclick="saveBackgroundMusic(backgroundMusicDropDown.selectedIndex)">Save</button>
+                                                </form>
+                                                <div style="height:10px"></div>
+                                                <div>
+                                                    Preview:
+                                                    <div style="height:10px"></div>
+                                                    <div id="mySoundController">
+                                                        <audio controls style="width:210px">
+                                                            <source id="soundController" src="" type="audio/mpeg">
+                                                        </audio>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="backgroundMusicTooltipForSuccesfullSave" style="display: none">
+                                                Saved succesfully
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>&nbsp;&nbsp;</li>
+                                <li>
+                                    <button type="button" class="btn btn-default btn-lg" onclick="onPlayVideoClick()">
+                                        <span class="glyphicon glyphicon-facetime-video"></span> Play Video
+                                    </button>
+                                </li>
+                                <li>&nbsp;&nbsp;</li>
+                                <li>
+                                    <button id="shareVideoToolTipHolder" type="button" class="btn btn-default btn-lg">
+                                        <span class="glyphicon glyphicon-globe"></span> Share Video
+                                    </button>
+
+                                    <div id="shareVideoToolTipHolderWrapper" style="display:none">
+                                        <div id="shareVideoToolTip">
+                                            <center>Link to share your video with others</center>
+                                            <div style="height:5px"></div>
+
+                                            <div class="form-inline">
+                                                <input id ="shareVideoLinkDiv" type="text" class="form-control" style="width:300px" value="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                        
+                                </li>
+                            </ul>
+                        </div><!--/.nav-collapse -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tempPics" style="display:none">
+    </div>
+    <input id="helperForFoucs" type="text" ng-model="yourName">
+    <input id="helperForFoucs2" type="text" ng-model="yourName">
+</body>
+</html>
