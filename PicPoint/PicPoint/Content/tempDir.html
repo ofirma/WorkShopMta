@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Displaying text directions with <code>setPanel()</code></title>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script>
+
+
+        function initialize() {
+            var directionsDisplay;
+            var directionsService = new google.maps.DirectionsService();
+  directionsDisplay = new google.maps.DirectionsRenderer();
+
+
+  directionsDisplay.setPanel(document.getElementById('directions-panel'));
+
+
+  var start = new google.maps.LatLng(32.08018, 34.78056);
+  var end = new google.maps.LatLng(32.077825, 34.773898);
+
+  var request = {
+      origin: start,
+      destination: end,
+      travelMode: google.maps.TravelMode.DRIVING
+  };
+  directionsService.route(request, function (response, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(response);
+      }
+  });
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+    <div id="directions-panel"></div>
+  </body>
+</html>

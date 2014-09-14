@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Animated Trip Editor</title>
+    <title>TripAlive Editor</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/tipped/tooltipster.css" rel="stylesheet">
@@ -12,9 +12,9 @@
 </head>
 <body>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.16/angular.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/angular.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap/bootstrap.min.js"></script>
     <script src="js/tipped/jquery.tooltipster.js"></script>
@@ -84,7 +84,7 @@
                 <div class="navbar-header">
                     <div class="navbar-brand" style="color:white">
                         <span class="glyphicon glyphicon-record"></span>
-                        Animated Trip
+                        TripAlive
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
@@ -96,7 +96,7 @@
                                 <div style="margin-left:10%" id="userOptionsToolTip">
                                     <a href="main.html">My Videos</a>
                                     <div style="border-top:1px solid white;margin-top:6px;margin-bottom:10px"></div>
-                                    <a href="main.html">Log Out</a>
+                                    <a onclick="logout()" style="cursor: pointer">Log Out</a>
                                 </div>
                             </div>
                         </li>
@@ -240,7 +240,7 @@
                                             <div style="height:5px"></div>
 
                                             <div class="form-inline">
-                                                <input type="text" class="form-control" style="width:300px" value="http://www.blablabalba.com/videoId=343" />
+                                                <input id ="shareVideoLinkDiv" type="text" class="form-control" style="width:300px" value="" />
                                             </div>
                                         </div>
                                     </div>

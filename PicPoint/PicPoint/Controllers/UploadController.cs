@@ -22,6 +22,7 @@ public class UploadController : ApiController
 
         string root = HttpContext.Current.Server.MapPath("~/App_Data");
         var provider = new MultipartFormDataStreamProvider(root);
+        var rowCount = new { RowCount = 10 };
 
         // Read the form data and return an async task.
         var task = Request.Content.ReadAsMultipartAsync(provider).
@@ -36,6 +37,31 @@ public class UploadController : ApiController
                 foreach (MultipartFileData file in provider.FileData)
                 {
                     Photos photo = Photos.CreatePhotos(Guid.NewGuid().ToString());
+
+                    using (var reader = new ExifReader(file.LocalFileName))
+                    {
+                        double[] val;
+                        reader.GetTagValue(ExifTags.GPSLongitude, out val);
+
+                        if (val == null)
+                        {
+                            return Request.CreateResponse(HttpStatusCode.OK, rowCount, Configuration.Formatters.JsonFormatter);
+                        }
+
+                        photo.longitude1 = val[0];
+                        photo.longitude2 = val[1];
+                        photo.longitude3 = val[2];
+
+                        reader.GetTagValue(ExifTags.GPSLatitude, out val);
+                        photo.latitude1 = val[0];
+                        photo.latitude2 = val[1];
+                        photo.latitude3 = val[2];
+
+                        string date = null;
+                        reader.GetTagValue(ExifTags.DateTime, out date);
+                        photo.date = GetDateFromString(date);
+                    }
+
                     FileStream stream = File.OpenRead(file.LocalFileName);
                     byte[] fileBytes = new byte[stream.Length];
                     string fileName = file.Headers.ContentDisposition.FileName.Remove(0, 1);
@@ -56,34 +82,24 @@ public class UploadController : ApiController
                     //stream.Close();
                     //photo.photo = fileBytes;
 
-                    using (var reader = new ExifReader(file.LocalFileName))
-                    {
-                        double[] val;
-                        reader.GetTagValue(ExifTags.GPSLongitude, out val);
-                        photo.longitude1 = val[0];
-                        photo.longitude2 = val[1];
-                        photo.longitude3 = val[2];
-
-                        reader.GetTagValue(ExifTags.GPSLatitude, out val);
-                        photo.latitude1 = val[0];
-                        photo.latitude2 = val[1];
-                        photo.latitude3 = val[2];
-
-                        string date = null;
-                        reader.GetTagValue(ExifTags.DateTime, out date);
-                        photo.date = GetDateFromString(date);
-                    }
                     
                     DBEntities.Proxy.Photos.AddObject(photo);
                     DBEntities.Proxy.SaveChanges();
                     
                     Trace.WriteLine(file.Headers.ContentDisposition.FileName);
                     Trace.WriteLine("Server file path: " + file.LocalFileName);
+                    
                 }
-                var rowCount = new { RowCount = 10 };
+                
 
                 return Request.CreateResponse(HttpStatusCode.OK, rowCount, Configuration.Formatters.JsonFormatter);
             });
+
+        //foreach (MultipartFileData file in provider.FileData)
+        //{
+        //    File.Delete(file.LocalFileName);
+        //}
+
 
         return task;
     }

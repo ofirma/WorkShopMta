@@ -259,8 +259,9 @@ app.controller('videosController', function ($scope, $http) {
     }
 
     $scope.getRecVideos = function () {
+        var searchKeyword = getSearchKeyword();
         $http({
-            url: '/GetVideosByFilter/GetVideosOfUser/?filter=',
+            url: '/GetVideosByFilter/GetVideosOfUser/?filter=' + searchKeyword,
             method: 'GET'
         }).success(function (data, status, headers, config) {
             $scope.videosLoading = false;
@@ -280,7 +281,6 @@ app.controller('videosController', function ($scope, $http) {
             type: 'GET',
             url: '/getvideosofuser/getvideosofuser'
         }).done(function (data) {
-            console.log(data);
             $scope.userVideos = data;
         });
 
@@ -288,11 +288,14 @@ app.controller('videosController', function ($scope, $http) {
 
     setTimeout(function () {
         $scope.getRecVideos();
-    }, 300);
+    }, 600);
     
 
     setTimeout(function () {
         $scope.getUserVideos();
+        if (tripVidsMode()) {
+            clickOnTripVideosOptionNativeJs();
+        }
     }, 300);
     
 
@@ -357,8 +360,28 @@ app.controller('videosController', function ($scope, $http) {
     }
 });
 
+function getSearchKeyword() {
+    var v = window.location + '';
+    if (v.split('?=').length < 2) {
+        return "";
+    }
+    else {
+        return v.split('?=')[1];
+    }
+}
 
-
+function tripVidsMode() {
+    var v = window.location + '';
+    if (v.split('?mode=').length < 2) {
+        return false;
+    }
+    else if (v.split('?mode=')[1] == 'my') {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 
 function signUp() {
 
@@ -399,6 +422,5 @@ function incVideoViews(videoId) {
         type: 'GET',
         url: '/incviewsforvideo/incviews/?videoId='+videoId
     }).done(function (data) {
-        alert(data);
     });
 }

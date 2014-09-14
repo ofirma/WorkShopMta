@@ -70,4 +70,20 @@ angular
         uploader.bind('completeall', function (event, items) {
             console.info('Complete all', items);
         });
+
+        $scope.userLoggedIn = false;
+        $.ajax({
+            type: 'GET',
+            url: '/CheckIfUserIsLoggedIn/Get'
+        }).done(function (data) {
+            if (data.isLoggedIn) {
+                $scope.username = data.username;
+                $scope.userLoggedIn = true;
+                $scope.$apply();
+            }
+            else {
+                window.location = 'main.html';
+            }
+        });
+
     });

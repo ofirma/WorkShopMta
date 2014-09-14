@@ -1,0 +1,72 @@
+        body {
+            /*overflow: hidden;*/
+        }
+
+        .menuOption {
+            cursor: pointer;
+            color: #428bca;
+            height: 30px;
+            border: 1px solid #ccc;
+            background-color: white;
+            vertical-align: middle;
+            padding: 2px;
+            font-weight: bold;
+        }
+
+        .menuOptionSelected {
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            height: 30px;
+            border: 1px solid #ccc;
+            background-color: #428bca;
+            vertical-align: middle;
+            padding: 2px;
+        }
+
+        .menuOptionSelected:hover {
+            border-color:#333;
+        }
+
+        .menuOption:hover {
+            border-color: #333;
+        }
+
+        .my-custom-theme {
+            border-radius: 5px;
+            border: 2px solid #000;
+            background: #333;
+            color: white;
+            z-index: 2147483640;
+        }
+
+        .my-custom-themeNoBorder {
+            border-radius: 5px;
+            border: 2px solid #000;
+            border-top: 0px;
+            border-right: 0px;
+            border-left: 0px;
+            background: #222;
+            color: white;
+            z-index: 2147483640;
+        }
+        /* Use this next selector to style things like font-size and line-height: */
+        .my-custom-themeNoBorder .tooltipster-content {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 16px;
+            padding: 8px 10px;
+            color: white;
+        }
+
+        .my-custom-themeNoBorder .tooltipster-content a {
+            font-size: 13px;
+            color: white;
+        }
+        /* Use this next selector to style things like font-size and line-height: */
+        .my-custom-theme .tooltipster-content {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 16px;
+            padding: 8px 10px;
+        }

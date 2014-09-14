@@ -1,4 +1,3 @@
-
 html, body, #map-canvas {
 height: 100%;
 width: 100%;
@@ -8,11 +7,24 @@ position: fixed;
 margin: 0px;
 padding: 0px;
 }
+#map-canvas {
+    top: 20px;
+}
 .audioPlayer{
 position:fixed;
 top:0px;
 left:0px;
 z-index: 2147483640;
+}
+.headerLink{
+    background-color: #333;
+    top:0px;
+    position: fixed;
+    height:20px;
+    margin:0px 0px 0px 0px;
+    padding:0px 0px 0px 0px;
+    width:100%;
+    font-size:14px;
 }
 .pano{
 position:absolute;

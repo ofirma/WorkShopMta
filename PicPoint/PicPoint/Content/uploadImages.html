@@ -4,75 +4,52 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Animated Trip Editor</title>
+    <title>TripAlive</title>
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
+    <link href="css/tipped/tooltipster.css" rel="stylesheet">
+    <link href="css/uploadImages.css" rel="stylesheet">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap/bootstrap.min.js"></script>
-    <script src="http://code.angularjs.org/1.1.5/angular.min.js"></script>
+    <script src="js/angular.min.js"></script>
     <script src="js/angularFileUpload/angular-file-upload.js"></script>
     <script src="js/angularFileUpload/controllers.js"></script>
     <script src="js/angularFileUpload/directives.js"></script>
     <script src="js/uploadImages.js"></script>
-    <style>
-        .scrollLimited {
-            max-height: 325px;
-            overflow: auto;
-            white-space: nowrap;
-        }
-
-        .my-drop-zone {
-            border: dotted 3px lightgray;
-        }
-
-        .ng-file-over {
-            border: dotted 3px red;
-        }
-        /* Default class applied to drop zones on over */
-        .another-file-over-class {
-            border: dotted 3px green;
-        }
-
-        html, body {
-            height: 100%;
-        }
-
-        canvas {
-            background-color: #f3f3f3;
-            -webkit-box-shadow: 3px 3px 3px 0 #e3e3e3;
-            -moz-box-shadow: 3px 3px 3px 0 #e3e3e3;
-            box-shadow: 3px 3px 3px 0 #e3e3e3;
-            border: 1px solid #c3c3c3;
-            height: 100px;
-            margin: 6px 0 0 6px;
-        }
-    </style>
 </head>
-<body ng-controller="TestController" ng-file-drop>
+<body ng-controller="TestController" ng-show="userLoggedIn" ng-file-drop>
+    <script src="js/tipped/jquery.tooltipster.js"></script>
     <div class="container-fluid">
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <div class="navbar-brand" style="color:white">
                         <span class="glyphicon glyphicon-record"></span>
-                        PicPoint
+                        TripAlive
                     </div>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Moshe Kerbel</a></li>
-                        <li><a href="#"><span class="glyphicon glyphicon-info-sign"></span> Help</a></li>
+                        <li><a href="main.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                        <li>
+                            <a href="" id="userOptions"><span class="glyphicon glyphicon-user"></span> {{username}}</a>
+                            <div id="userOptionsToolTipWrapper" style="display: none">
+                                <div style="margin-left:10%" id="userOptionsToolTip">
+                                    <a href="main.html?mode=my">My Trip Videos</a>
+                                    <div style="border-top:1px solid white;margin-top:6px;margin-bottom:10px"></div>
+                                    <a onclick="logout()" style="cursor: pointer">Log Out</a>
+                                </div>
+                            </div>
+                        </li>
                     </ul>
                     <form class="form-inline" role="form" style="margin-top:10px">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="exampleInputEmail2" placeholder="Search..." style="width:400px;height:30px">
+                            <input type="text" class="form-control" id="searchInput" onkeyup="onSearchEnter(event)" placeholder="Search..." style="width:400px;height:30px">
                         </div>
                         <div class="form-group">
-                            <button type="button" class="btn btn-default" style="height:30px">
+                            <button type="button" class="btn btn-default" style="height:30px" onclick="onSearchClick()">
                                 <span class="glyphicon glyphicon-search"></span>
                             </button>
                         </div>
@@ -87,7 +64,7 @@
                     <br />
                     <div class="col-xs-12 col-md-12">
                         <div style="height:30px">
-                            <a href="#" class="thumbnail" style="font-weight:bold;font-size:14px;background-color:#fff;vertical-align: middle !important;">
+                            <a href="main.html" class="thumbnail" style="font-weight:bold;font-size:14px;background-color:#fff;vertical-align: middle !important;">
                                 <span class="glyphicon glyphicon-facetime-video"></span>
                                 Videos to Watch
                             </a>
@@ -98,9 +75,9 @@
                 <div class="row">
                     <div class="col-xs-12 col-md-12">
                         <div style="height:30px">
-                            <a href="#" class="thumbnail" style="font-weight:bold;font-size:14px;background-color:#fff;vertical-align: middle !important;">
+                            <a href="main.html?mode=my" class="thumbnail" style="font-weight:bold;font-size:14px;background-color:#fff;vertical-align: middle !important;">
                                 <span class="glyphicon glyphicon-user"></span>
-                                My Video Trips
+                                My Trip Videos
                             </a>
                         </div>
                     </div>
@@ -109,10 +86,11 @@
                 <div class="row">
                     <div class="col-xs-12 col-md-12">
                         <div style="height:30px">
-                            <a href="#" class="thumbnail" style="font-weight:bold;font-size:14px;background-color:#fff;vertical-align: middle !important;">
-                                <span class="glyphicon glyphicon-time"></span>
+                            <div onclick="alert('We just aired now \nThis option and more will be available soon')" class="thumbnail menuOption">
+                                &nbsp;
+                                <span class="glyphicon glyphicon-unchecked"></span>
                                 History
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -120,10 +98,11 @@
                 <div class="row">
                     <div class="col-xs-12 col-md-12">
                         <div style="height:30px">
-                            <a href="#" class="thumbnail" style="font-weight:bold;font-size:14px;background-color:#fff;vertical-align: middle !important;">
+                            <div onclick="alert('We just aired now \nThis option and more will be available soon')" class="thumbnail menuOption">
+                                &nbsp;
                                 <span class="glyphicon glyphicon-time"></span>
-                                Watch Later
-                            </a>
+                                Watch Laster
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -219,7 +198,7 @@
                                 <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
                                     <span class="glyphicon glyphicon-trash"></span> Remove all
                                 </button>
-                                <br/><br/>
+                                <br /><br />
                                 <button onclick="onContinueToVideoEditorClick()" type="button" class="btn btn-info btn-lg" ng-disabled="!uploader.queue.length">
                                     <span class="glyphicon glyphicon-facetime-video"></span> Continue To Video Editor
                                 </button>

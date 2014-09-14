@@ -3,20 +3,22 @@
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <title></title>
+    <title>TripAlive</title>
 
     <link rel="stylesheet" href="css/movie/movie.css" />
-    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="js/jquery-1.9.1.js"></script>
+    <script src="js/jquery-ui.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     <script src="js/movie/async.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+    <script src="js/angular.min.js"></script>
     <link rel="stylesheet" href="css/movie/responsiveslides.css">
     <link rel="stylesheet" href="css/movie/demo.css">
     <script src="js/movie/responsiveslides.min.js"></script>
 
     <script>
-
+        var globalCurrentDayIndex;
+        var globalCurrentLocationIndex;
+        var globalCallback = '';
         var DRIVING = "Driving";
         var TRANSIT = "Transit";
         var WALKING = "Walking";
@@ -25,7 +27,6 @@
         var map;
         var panorama;
         var marker;
-        //var days = createDays();
         var days = [];
 
         $(document).ready(function () {
@@ -39,6 +40,7 @@
                 }
             }).done(function (data) {
                 days = data.days;
+                setBackgroundMusic(data.backgroundMusic.path);
                 initMap();
                 initElements();
                 startVideo();
@@ -46,46 +48,9 @@
 
         });
 
-        function createDays() {
-            var innerDays = [
-                {
-                    day: 1,
-                    daySummary: "<br/>Day 1 - Tel Aviv<br/><br/>Rabin Square<br/>Dizengoff Square<br/>Taylet Tel Aviv",
-                    locations: [
-                        {
-                            latLang: { x: 32.08018, y: 34.78056 },
-                            name: "Rabin Square",
-                            pics: [
-                                { name: 'rabin1.jpg', caption: 'כיכר רבין' },
-                                { name: 'rabin2.jpg', caption: 'אני בכיכר' },
-                                { name: 'rabin3.jpg', caption: 'בלה בלה בלה' }
-                            ],
-                            travelModeToNextLocation: WALKING
-                        },
-                        {
-                            latLang: { x: 32.077825, y: 34.773898 },
-                            name: "Dizengof Square",
-                            pics: [
-                                { name: 'dizi1.jpg', caption: 'כיכר דיזנגוף 1' },
-                                { name: 'dizi2.jpg', caption: 'כיכר דיזנגוף 2' },
-                                { name: 'dizi3.jpg', caption: 'כיכר דיזנגוף 3' }
-                            ],
-                            travelModeToNextLocation: TRANSIT
-                        },
-                        {
-                            latLang: { x: 32.079636, y: 34.766977 },
-                            name: "Tayelet Tel Aviv",
-                            pics: [
-                                { name: 'Tayelet1.jpg', caption: 'טיילת תל אביב 1' },
-                                { name: 'Tayelet2.jpg', caption: 'טיילת תל אביב 2' },
-                                { name: 'Tayelet3.jpg', caption: 'טיילת תל אביב 3' }
-                            ]
-                        }
-                    ]
-                }
-            ];
-
-            return innerDays;
+        function setBackgroundMusic(bgMusic) {
+            document.getElementById("theMusicSrc").src = bgMusic;
+            document.getElementById("myAudio").load();
         }
 
         function partial(func /*, 0..n args */) {
@@ -115,9 +80,9 @@
 
         }
 
-        function showStreetView(latLangParam, callback) {
+        function showStreetView(latitude, longitude, callback) {
 
-            var latLang = new google.maps.LatLng(latLangParam.x, latLangParam.y);
+            var latLang = new google.maps.LatLng(latitude, longitude);
 
             // todo: get it outside
             var content = '<div style="width:350px;font-size:20px;height: 30px; text-align: center; vertical-align: middle">Showing street view of ' + 'Rabin Square' + '</div>';
@@ -192,8 +157,8 @@
             }, 1);
         }
 
-        function showPics(latLangParam, pics, callback) {
-            var latLang = new google.maps.LatLng(latLangParam.x, latLangParam.y);
+        function showPics(latitude, longitude, pics, callback) {
+            var latLang = new google.maps.LatLng(latitude, longitude);
 
             // todo: get it outside
             var content = '<div style="width:350px;font-size:20px;text-align: center">Pictures taken here</div>';
@@ -267,10 +232,10 @@
             return travelModeIcon;
         }
 
-        function showRouteForNextLocation(startPoint, endPoint, travelModeInput, callback) {
+        function showRouteForNextLocation(startPointX, startPointY, endPointX, endPointY, travelModeInput, callback) {
 
             // Showing directions info windows
-            var latLang = new google.maps.LatLng(startPoint.x, startPoint.y);
+            var latLang = new google.maps.LatLng(startPointX, startPointY);
 
             var content = '<div style="width:200px;font-size:20px;text-align: center">Showing directions to next location</div>';
 
@@ -297,8 +262,8 @@
                 var travelMode = getTravelMode(travelModeInput);
                 var travelModeIcon = getTravelModeIcon(travelModeInput);
 
-                var start = new google.maps.LatLng(startPoint.x, startPoint.y);
-                var end = new google.maps.LatLng(endPoint.x, endPoint.y);
+                var start = new google.maps.LatLng(startPointX, startPointY);
+                var end = new google.maps.LatLng(endPointX, endPointY);
                 var request = {
                     origin: start,
                     destination: end,
@@ -369,23 +334,55 @@
             actions.push(f0);
 
             for (var i = 0; i < dayData.locations.length; i++) {
+                var f1 = partial(showStreetView, dayData.locations[i].latitude, dayData.locations[i].longitude);
+                var f2 = partial(showPics, dayData.locations[i].latitude, dayData.locations[i].longitude, dayData.locations[i].pics);
+                var f9 = partial(showLocationFullData, dayNum, i);
+                
+                if (dayData.locations[i].showStreetView) {
+                    actions.push(f1);
+                }
 
-                var f1 = partial(showStreetView, dayData.locations[i].latLang);
-                var f2 = partial(showPics, dayData.locations[i].latLang, dayData.locations[i].pics);
+                actions.push(f2);
 
-                actions.push(f1, f2);
+                actions.push(f9);
 
                 if ((i + 1) != dayData.locations.length) {
                     var f3 = partial(showRouteForNextLocation,
-                                     dayData.locations[i].latLang,
-                                     dayData.locations[i + 1].latLang,
+                                     dayData.locations[i].latitude,
+                                     dayData.locations[i].longitude,
+                                     dayData.locations[i + 1].latitude,
+                                     dayData.locations[i + 1].longitude,
                                      dayData.locations[i].travelModeToNextLocation);
                     actions.push(f3);
                 }
             }
 
+            if (dayNum == days.length - 1) {
+                var fLast = partial(finishMovie);
+                actions.push(fLast);
+            }
 
             return actions;
+        }
+
+        function finishMovie() {
+            setElementToScreenCenter($('#iframeMovieEnded'));
+            $('#iframeMovieEnded').css('display', 'block');
+        }
+
+        function showLocationFullData(currentDayIndex, currentLocationIndex, callback) {
+            globalCurrentDayIndex = currentDayIndex;
+            globalCurrentLocationIndex = currentLocationIndex;
+            var e = $('#iframeLocationFullData');
+            e.attr('src', 'locationFullData.html');
+            setElementToScreenCenter(e)
+            e.css('display', 'block');
+            globalCallback = callback;
+        }
+
+        function closeLocationFullData() {
+            var e = $('#iframeLocationFullData');
+            e.css('display', 'none');
         }
 
         function initElements() {
@@ -394,8 +391,7 @@
         }
 
         function initMap() {
-            var firstLatLangVal = days[0].locations[0].latLang;
-            var firstLatLang = new google.maps.LatLng(firstLatLangVal.x, firstLatLangVal.y);
+            var firstLatLang = new google.maps.LatLng(days[0].locations[0].latitude, days[0].locations[0].longitude);
 
             mapOptions = {
                 zoom: 18,
@@ -431,7 +427,7 @@
 
             var left = (winW - w) / 2;
             var top = (winH - h) / 2;
-            e.css('top', top);
+            e.css('top', top + 27);
             e.css('left', left);
         }
 
@@ -475,10 +471,10 @@
             $("#slider4").responsiveSlides({
                 auto: true,
                 pager: false,
-                nav: true,
+                nav: false,
                 speed: 800,
                 namespace: "callbacks",
-                timeout: 2000,
+                timeout: 1500,
                 after: function () {
                     globalPicsShown++;
                     if (globalPicsShown == numOfPics) {
@@ -513,10 +509,17 @@
     <div id="map-canvas"></div>
 
     <div class="audioPlayer">
-        <audio onpause="" autoplay loop controls>
-            <source src="resources/sounds/12.mp3">
+        <audio id="myAudio" onpause="" autoplay loop controls>
+            <source id="theMusicSrc" src="">
         </audio>
         
+    </div>
+    <iframe id="iframeLocationFullData" src="" style="border:0px;display:none;position: fixed; top:0px; left:0px; width:800px; height: 660px"></iframe>
+    <iframe id="iframeMovieEnded" src="movieEnded.html" style="border-radius: 16px;border: 1px solid black; display: none; position: fixed; top: 0px; left: 0px; width: 400px; height: 200px"></iframe>
+    <div class="headerLink" style="font-family: arial; font-weight: bold">
+        <center>
+            <a href="main.html">Go back to TripAlive</a>
+        </center>
     </div>
 </body>
 </html>

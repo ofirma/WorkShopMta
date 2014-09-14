@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Http;
 using PicPoint.Models;
 using System.Device.Location;
+using BenjaminSchroeter.GeoNames;
 
 namespace PicPoint.Controllers
 {
@@ -113,12 +114,14 @@ namespace PicPoint.Controllers
 
 
             List<Days> days = DBEntities.Proxy.Days.Where(x => x.trip_id == newTripId).ToList();
+            double longitude = -1, latitude = -1;
             foreach (Days currDay in days)
             {
                 List<Photos> photosOfDay = DBEntities.Proxy.Photos.Where(x => x.day_id == currDay.day_id).ToList();
                 List<PicWrapper> list = DividePhotos(photosOfDay);
                 PhotosComparer pc = new PhotosComparer();
                 var listOfPhotos = list.GroupBy(x => x, pc).Select(grp => grp.ToList()).ToList();
+                
                 foreach (List<PicWrapper> currList in listOfPhotos)
                 {
                     Locations loc = Locations.CreateLocations(Guid.NewGuid().ToString());
@@ -126,9 +129,14 @@ namespace PicPoint.Controllers
                     loc.travelModeToNextLocation = "WALKING";
                     loc.longitude = currList[0].photoData.longitude3;
                     loc.latitude = currList[0].photoData.latitude3;
+                    if (longitude == -1)
+                    {
+                        longitude = loc.longitude.Value;
+                        latitude = loc.latitude.Value;
+                    }
                     loc.story = "";
                     loc.showStreetView = 1;
-                    loc.name = GetRandomCity();
+                    loc.name = GetCity(loc.longitude.Value, loc.latitude.Value);
                     DBEntities.Proxy.AddToLocations(loc);
                     foreach (PicWrapper currObj in currList)
                     {
@@ -137,12 +145,19 @@ namespace PicPoint.Controllers
                 }
             }
 
-            trip.trip_name = GetRandomCity() + " - " + GetNumOfDays(trip) + " Days";
+            trip.trip_name = GetCountry(longitude, latitude) + " - " + GetNumOfDays(trip) + " Days";
 
 
 
             DBEntities.Proxy.SaveChanges();
             return Json(newTripId, JsonRequestBehavior.AllowGet);
+        }
+
+        private string GetCountry(double longitude, double latitude)
+        {
+            Geoname Place = GeoNamesOrgWebservice.FindNearbyPlaceName((decimal)latitude, (decimal)longitude);
+            List<Geoname> ParentPlaces = Place.Hierarchy() as List<Geoname>;
+            return Place.CountryName;
         }
 
         private List<PicWrapper> DividePhotos(List<Photos> photosOfDay)
@@ -182,18 +197,11 @@ namespace PicPoint.Controllers
 
         }
 
-        private string GetRandomCity()
+        private string GetCity(double longitude, double latitude)
         {
-            Random ran = new Random();
-            int value = ran.Next(2);
-            if (value == 0)
-            {
-                return "Amsterdam";
-            }
-            else
-            {
-                return "London";
-            }
+            Geoname Place = GeoNamesOrgWebservice.FindNearbyPlaceName((decimal)latitude, (decimal)longitude);
+            List<Geoname> ParentPlaces = Place.Hierarchy() as List<Geoname>;
+            return Place.Name;
         }
 
         private string GetNumOfDays(Trips trip)

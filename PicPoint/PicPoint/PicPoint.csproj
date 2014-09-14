@@ -39,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BenjaminSchroeter.GeoNames">
+      <HintPath>..\..\..\..\Downloads\GeonamesDotOrgDotNet-October-2008\GeonamesDotOrgDotNet\GeoNames\bin\Debug\BenjaminSchroeter.GeoNames.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -451,6 +454,7 @@
     <None Include="Content\js\autocomplete\.git\packed-refs" />
     <None Include="Content\js\autocomplete\.git\refs\heads\master" />
     <None Include="Content\js\autocomplete\.git\refs\remotes\origin\HEAD" />
+    <None Include="Properties\PublishProfiles\Profile.pubxml" />
     <None Include="Properties\PublishProfiles\TripAlive - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\TripAlive - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\TripAlive - Web Deploy %282%29.pubxml" />

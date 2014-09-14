@@ -1,0 +1,134 @@
+{
+    "musicOptions": [
+        {
+            "id": 0,
+            "name": "Sunny Beach",
+            "path": "resources/sounds/1.mp3"
+        },
+        {
+            "id": 1,
+            "name": "Happiness",
+            "path": "resources/sounds/happiness.mp3"
+        },
+        {
+            "id": 2,
+            "name": "Acoustic Air",
+            "path": "resources/sounds/acoustic.mp3"
+        },
+        {
+            "id": 3,
+            "name": "Funky",
+            "path": "resources/sounds/funky.mp3"
+        },
+        {
+            "id": 4,
+            "name": "Clear Day",
+            "path": "resources/sounds/acoustic.mp3"
+        }
+    ],
+    "backgroundMusic": {
+        "id": 0,
+        "name": "Sunny Beach",
+        "path": "resources/sounds/acoustic.mp3"
+    },
+    "days": [
+        {
+            "day": "27.01.2014",
+            "daySummary": "<br/>27.01.2014<br/><br/>Taylet Tel Aviv",
+            "picsNum": 10,
+            "locations": [
+                {
+                    "id": 546,
+                    "seqId": 0,
+                    "latitude": 32.08018,
+                    "longitude": 34.78056,
+                    "name": "Rabin Square",
+                    "pics": [
+                        {
+                            "name": "rabin1.jpg",
+                            "caption": "Rabin Square view"
+                        },
+                        {
+                            "name": "rabin2.jpg",
+                            "caption": "Rabin Square very beatiful"
+                        },
+                        {
+                            "name": "rabin3.jpg",
+                            "caption": "Amazing..."
+                        },
+                        {
+                            "name": "rabin4.jpg",
+                            "caption": "This is Rabin square"
+                        },
+                        {
+                            "name": "rabin5.jpg",
+                            "caption": "Having fun..."
+                        }
+                    ],
+                    "showStreetView": true,
+                    "story": "We have been in Rabin Sqaure for 3 hours.<br/>It was very cool.<br/>I took some nice photos.",
+                    "travelModeToNextLocation": "Walking"
+                },
+                {
+                    "id": 678781,
+                    "seqId": 1,
+                    "latitude": 32.077825,
+                    "longitude": 34.773898,
+                    "name": "Dizengof Square",
+                    "pics": [
+                        {
+                            "name": "dizi1.jpg",
+                            "caption": "Dizingof Square"
+                        },
+                        {
+                            "name": "dizi2.jpg",
+                            "caption": "Having fun in the square"
+                        },
+                        {
+                            "name": "dizi3.jpg",
+                            "caption": "What a beatiful photo"
+                        },
+                        {
+                            "name": "dizi4.jpg",
+                            "caption": "Very nice view here"
+                        },
+                        {
+                            "name": "dizi5.jpg",
+                            "caption": "I love this photo"
+                        }
+                    ],
+                    "story": "OK its night, it's time to have some fun! we are in Dizingof street. <br/>Before we went to the bar, we took some photos near the sqaure. After that we went to buy something to eat inside the mall. Then we saw a friend of mine and went out with her for a drink.",
+                    "showStreetView": true,
+                    "travelModeToNextLocation": "Transit"
+                },
+                {
+                    "id": "556772",
+                    "seqId": "2",
+                    "latitude": 32.079636,
+                    "longitude": 34.766977,
+                    "name": "Tayelet Tel Aviv",
+                    "pics": [
+                        {
+                            "name": "tayelet1.jpg",
+                            "caption": "Tayelet Tel Aviv!!"
+                        },
+                        {
+                            "name": "tayelet2.jpg",
+                            "caption": "The beach here is beautiful"
+                        },
+                        {
+                            "name": "tayelet3.jpg",
+                            "caption": "Having fun in the Tayelet!"
+                        },
+                        {
+                            "name": "tayelet4.jpg",
+                            "caption": "Nice day, nice view...."
+                        }
+                    ],
+                    "story": "Tayeley Tel Aviv!.<br/>Heard so much about it!</br>It was very beatiful here.</br> We have been in the beach</br>Took some photos and had a lot of fun.",
+                    "showStreetView": false
+                }
+            ]
+        }
+    ]
+}

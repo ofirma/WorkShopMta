@@ -1,0 +1,35 @@
+body{
+    background-color: transparent;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+body a{
+    color:black;
+}
+.mainDiv{
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+.noMargin{
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+#map-canvas {
+    height: 1%;
+    width: 1%;
+    top: 0px;
+    right: 0xp;
+    position: fixed;
+    margin: 0px;
+    padding: 0px;
+}
+#directions-panel {
+    height: 400px;
+    float: right;
+    width: 390px;
+    overflow: auto;
+}
+#directions-panel {
+    float: none;
+    width: auto;
+}

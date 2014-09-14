@@ -18,6 +18,15 @@ function initialize() {
 
 google.maps.event.addDomListener(window, 'load', initialize);
         
+function logout(){
+    $.ajax({
+        type: 'GET',
+        url: '/SignOut/Get'
+    }).done(function (data) {
+        window.location = 'main.html';
+    });
+}
+
 angular.module('initExample', [])
   .controller('ExampleController', ['$scope', function ($scope, $http) {
       var allData = createDays();
@@ -26,9 +35,9 @@ angular.module('initExample', [])
       $scope.userLoggedIn = false;
       $.ajax({
           type: 'GET',
-          url: 'http://www.json-generator.com/api/json/get/cjVGeQsaKW?indent=2'
+          url: '/CheckIfUserIsLoggedIn/Get'
       }).done(function (data) {
-          if (data.loggedIn) {
+          if (data.isLoggedIn) {
               $scope.username = data.username;
               $('#helperForFoucs2').focus();
               $('#helperForFoucs').focus();
@@ -41,7 +50,7 @@ angular.module('initExample', [])
               type: 'GET',
               url: '/video/getdays/?id=' + myVideoId
           }).done(function (data) {
-              console.log(data);
+              console.log(data.days);
               $scope.days = data.days;
               $scope.musicOptions = data.musicOptions;
               $scope.backgroundMusic = data.backgroundMusic;
@@ -124,7 +133,6 @@ function onLocationClick(selectedLocationDataStr) {
     }
 
     changeLocationButtonToSelected(selectedLocation);
-    console.log(selectedLocationData);
     goToLocationOnMap(selectedLocationData.latitude, selectedLocationData.longitude);
 
     var locationData = $('#locationData');
@@ -260,7 +268,6 @@ function saveStoryChanges() {
 }
 function saveBackgroundMusic(selectedIndex) {
     var selectedMusicOption = document.getElementById('backgroundMusicDropDown').options[selectedIndex].value;
-    console.log('selectedMusicOption=' + selectedMusicOption);
     var dataToSend = { "id": myVideoId, "soundId": selectedMusicOption };
     $.ajax({
         type: 'POST',
@@ -352,6 +359,8 @@ function runAfterDataFetchFromServer () {
         theme: 'my-custom-theme'
     });
 
+    $('#shareVideoLinkDiv').val('/movie.html?videoId=' + myVideoId);
+
     $('#shareVideoToolTipHolder').tooltipster({
         content: $('#shareVideoToolTip'),
         contentAsHtml: true,
@@ -368,17 +377,20 @@ function runAfterDataFetchFromServer () {
         theme: 'my-custom-theme'
     });
 
-    $('#userOptions').tooltipster({
-        offsetY: -15,
-        arrow: false,
-        content: $('#userOptionsToolTip'),
-        contentAsHtml: true,
-        interactive: true,
-        autoClose: true,
-        theme: 'my-custom-themeNoBorder',
-        minWidth: 130,
-        trigger: 'click'
-    });
+    setTimeout(function () {
+        $('#userOptions').tooltipster({
+            offsetY: -15,
+            arrow: false,
+            content: $('#userOptionsToolTip'),
+            contentAsHtml: true,
+            interactive: true,
+            autoClose: true,
+            theme: 'my-custom-themeNoBorder',
+            minWidth: 130,
+            trigger: 'click'
+        });
+    },3000);
+
 
     musicBackgroundFromJson = angular.element(document.querySelector('[ng-controller="ExampleController"]'))
                    .scope().backgroundMusic;
@@ -393,6 +405,8 @@ function runAfterDataFetchFromServer () {
 
 
     $('#soundsTooltip').tooltipster('content', $('#backgroundMusicTooltip'));
+
+    
 };
 
 function getTransportTypeNameByIndex(transportTypeIndex) {
